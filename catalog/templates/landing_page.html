@@ -1,0 +1,36 @@
+{% extends 'base_generic.html'%}
+
+{% block cssfiles%}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/landing_page.css' %}" type="text/css">
+{% endblock %}
+
+{% block content %}
+<div id="main-content">
+  <div id="page-content">
+    <h1>My Library</h1>
+  </div>
+  <form action = "" method="post" id="signup-form" class="green-background">
+    {% csrf_token %}
+    <h3>Sign Up Here!</h3>
+    <p class="sub-heading">Become a member</p>
+    {% for field in form %}
+        <div class="form-fields">
+          {% for error in field.errors %}
+            <p class="error-field">{{ error }}</p>
+          {% endfor %}
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}
+            {% for h_text in field.help_text %}
+                <p class="help-text">{{ h_text }}</p>
+            {% endfor%}
+          {% endif %}
+        </div>
+    {% endfor %}
+    <div class="form-fields">
+      <input type="submit" value="Sign Up" class="submit-button crimson-background">
+    </div>
+  </form>
+</div>
+{% endblock %}

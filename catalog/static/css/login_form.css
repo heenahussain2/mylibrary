@@ -1,0 +1,80 @@
+.blue-background {
+			background-color: #0077AF;
+		}
+.crimson-background {
+	background-color: #d41a3d;
+}
+.green-background {
+	background-color: #00A87A;
+}
+h1 {
+	text-align : center;
+	/*font-size: 32pt;*/
+	font-family: 'Merienda', cursive;
+	color: white;
+	margin-top: 6rem;
+	margin-bottom: 10px;
+}
+p {
+    text-align: center;
+    margin-top: 0;
+    font-size: 17px;
+    color: white;
+	font-family: 'Rubik', sans-serif;
+}
+#login-form {
+		display: flex;
+    flex-direction: column;
+    margin-left: 30%;
+    margin-right: 30%;
+    margin-top: 2rem;
+    font-size: 17px;
+    color: white;
+    border-radius: 20px;
+    font-family: 'Rubik', sans-serif;
+}
+label {
+	display: flex;
+	text-align: center;
+	padding-bottom: 5px;
+}
+.form-fields {
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 1rem;
+}
+.form-control {
+	width: 100%;
+	height: auto;
+	padding: 10px;
+		border-radius: 25px;
+}
+.submit-button {
+    width: 100%;
+    height: auto;
+    font-size: 17px;
+    margin-left: 14px;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+    padding: 7px;
+    color: white;
+}
+.login-warning {
+	margin-top: 20px;
+  margin-bottom: 0;
+  color: #e30909;
+  font-weight: bold;
+}
+a.forgot-pass-link {
+  text-decoration: none;
+  color: white;
+}
+a.forgot-pass-link:hover {
+	text-decoration: underline;
+	color: white;
+}
+p.forgot-password {
+	margin-top: 20px;
+	font-size: 17px;
+}

@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %}
+
+{% block cssfiles %}
+{% load static %}
+  <link rel="stylesheet" href="{% static 'css/detail_view.css' %}" type="text/css">
+{% endblock %}
+
+{% block content %}
+  <div id="main-container" class="blue-background">
+    <!-- <div class="delete-book"><a href="{{ bookinstance.get_delete_url }}">Delete Book</a></div> -->
+    <h1>{{ bookinstance.book.title }}</h1>
+		<div class="book-author">Author - {{ bookinstance.book.author }}</div>
+		<div class="book-summary">
+			<strong style="text-decoration: underline;">Summary:</strong><br><br>
+			{{ bookinstance.summary }}
+		</div>
+		<p class="other-details"><strong style="text-decoration: underline;">ISBN:</strong> {{ bookinstance.book.isbn }}</p>
+		<p class="other-details"><strong style="text-decoration: underline;">Language:</strong> {{ bookinstance.book.language }}</p>
+		<p class="other-details"><strong style="text-decoration: underline;">Genre:</strong> {{ bookinstance.book.genre.all|join:", " }}</p>
+  </div>
+{% endblock %}

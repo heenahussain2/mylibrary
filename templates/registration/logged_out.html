@@ -1,0 +1,15 @@
+{% extends "base_generic.html" %}
+
+{% block cssfiles %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/logout_page.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div id="main-container">
+    <p>You have successfuly logged out!</p>
+		<p>Thank you for using</p>
+		<h1><a class="home-page-url" href="{% url 'landing-page' %}">My Library</a></h1>
+		<div class="view-details green-background"><a href="{% url 'login' %}" class="button">Login Again</a></div>
+  </div>
+{% endblock %}

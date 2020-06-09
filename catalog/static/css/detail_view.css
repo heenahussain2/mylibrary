@@ -1,0 +1,38 @@
+.blue-background {
+		background-color: #0077AF;
+	}
+#main-container {
+			display: flex;
+			flex-direction: column;
+			margin: 7rem 10rem;
+    	border-radius: 10px;
+    	color: rgba(255, 255, 255, 0.89);
+		}
+
+		h1 {
+		    margin-top: 0;
+		    text-align: center;
+		    font-size: 30pt;
+		    font-family: 'Merienda', cursive;
+		    padding-top: 2rem;
+		}
+		.book-author {
+		    padding-bottom: 15px;
+		    font-size: 14pt;
+		    font-family: 'Rubik', sans-serif;
+		    text-align: center;
+		}
+		.book-summary {
+		    font-size: 14pt;
+		    padding-right: 20px;
+		    padding-bottom: 20px;
+		    text-align: justify;
+		    line-height: 22px;
+		    font-family: 'Rubik', sans-serif;
+		    margin: 2rem 8rem 1rem 8rem;
+		}
+		.other-details {
+			font-size: 14pt;
+		  font-family: 'Rubik', sans-serif;
+		  margin: 1rem 8rem;
+		}

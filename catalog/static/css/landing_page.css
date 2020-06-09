@@ -1,0 +1,86 @@
+.blue-background {
+			background-color: #0077AF;
+		}
+.crimson-background {
+	background-color: #d41a3d;
+}
+.green-background {
+	background-color: #00A87A;
+}
+#main-content {
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: repeat(2,1fr);
+  margin-top: 5rem;
+}
+h1 {
+	text-align : center;
+	font-size: 32pt;
+	font-family: 'Merienda', cursive;
+	color: white;
+	margin-top: 1rem;
+	margin-bottom: 10px;
+}
+#signup-form {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20%;
+  margin-right: 10%;
+  margin-top:  2rem;
+  font-size: 17px;
+  color: white;
+  border-radius: 15px;
+  font-family: 'Rubik', sans-serif;
+}
+h3 {
+  text-align: center;
+  margin-bottom: 0;
+  font-size: 22px;
+}
+p.sub-heading {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 0;
+  font-size: 17px;
+}
+label {
+display: flex;
+text-align: center;
+padding-bottom: 5px;
+}
+
+.form-fields {
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 1rem;
+}
+.form-control {
+	width: 100%;
+	height: auto;
+	padding: 10px;
+	border-radius: 10px;
+}
+p.help-text {
+    color: #3c443a;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 15px;
+}
+p.error-field {
+  color: #e30909;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 13px;
+  font-weight: bold;
+}
+.submit-button {
+    width: 100%;
+    height: auto;
+    font-size: 17px;
+    margin-left: 14px;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+    margin-top: 0;
+    padding: 7px;
+    color: white;
+}

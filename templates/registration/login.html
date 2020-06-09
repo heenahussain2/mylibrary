@@ -1,0 +1,42 @@
+{% extends "base_generic.html" %}
+
+{% block cssfiles %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/login_form.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div id="main-content">
+    <h1>My Library</h1>
+    <p>Welcome Back ! Sign in to access your account.</p>
+    <form method="post" action="{% url 'login' %}" id="login-form" class="green-background">
+      {% csrf_token %}
+      {% if form.errors %}
+        <p class="login-warning">Your username and password didn't match. Please try again.</p>
+      {% endif %}
+      {% if next %}
+        {% if user.is_authenticated %}
+          <p class="login-warning">Your account doesn't have access to this page. To proceed,
+          please login with an account that has access.</p>
+        {% else %}
+          <p class="login-warning">Please login to see this page.</p>
+        {% endif %}
+      {% endif %}
+			<div class="form-fields">
+				<label id="username-label" for="username">{{ form.username.label_tag }}</label>
+				<input type="text" id="username" name="username" class="form-control" placeholder="Enter Username" required>
+			</div>
+			<div class="form-fields">
+				<label id="pass-label" for="password">{{ form.password.label_tag }}</label>
+				<input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+			</div>
+			<div class="form-fields">
+				<input type="submit" value="Login" class="submit-button crimson-background">
+			</div>
+      <input type="hidden" name="next" value="{{ next }}" />
+		</form>
+    <p class="forgot-password">
+      <a class="forgot-pass-link" href="{% url 'password_reset' %}">Forgot password?</a>
+    </p>
+  </div>
+{% endblock %}

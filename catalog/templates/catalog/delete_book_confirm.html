@@ -1,0 +1,21 @@
+{% extends 'base_generic.html' %}
+
+{% block cssfiles %}
+  {% load static%}
+  <link rel="stylesheet" href="{% static 'css/delete_book_confirm.css' %}" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div id="main-container">
+        <h1>My Library</h1>
+        <p>Are you sure you want to delete</p>
+        <p>"{{ book_instance.book.title }}"?<p>
+        <form id="delete-form" action="" method="post">
+          {% csrf_token %}
+          <input type="submit" class="button-class delete-button crimson-background" value="Yes, Delete">
+        </form>
+        <form class="no-action-form" action="{% url 'books' %}" method="get">
+          <input type="submit" class="button-class no-action-button green-background" value="No, Take me Back">
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{% block title %}<title>My Library</title>{% endblock %}
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Signika:wght@600&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Merienda:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300&display=swap" rel="stylesheet">
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/navbar_styles.css' %}">
+  {% block cssfiles %}
+  {% endblock %}
+</head>
+<body>
+  {% block navigation %}
+	<header id="nav-header">
+		{% if user.is_authenticated %}
+		<nav id="navbar-inside" class="navbar">
+			<ul class="main-list">
+				<!-- <li><a href="{% url 'logout'%}?next={{request.path}}" class="nav-link">Logout</a></li> -->
+				<li><a href="{% url 'index' %}" class="nav-link">Home</a></li>
+				<li><a href="my_library_about.html" class="nav-link">About</a></li>
+				<li><a href="{% url 'books' %}" class="nav-link">My Collection</a></li>
+				<li><a href="#" class="nav-link">Wishlist</a></li>
+			</ul>
+			<ul class="side-list">
+				<li><a href="{% url 'logout'%}" class="nav-link">Logout</a></li>
+				<li><a href="#" class="nav-link">{{ user.username }}</a></li>
+			</ul>
+		</nav>
+		{% else %}
+		<nav id="navbar-outside" class="navbar">
+			<ul>
+				<li><a href="{% url 'login'%}" class="nav-link">Login</a></li>
+			</ul>
+				<!-- <li><a href="{% url 'login'%}" class="nav-link">Sign Up</a></li> -->
+				<!-- <li><a href="{% url 'login'%}?next={{request.path}}" class="nav-link">Login</a></li> -->
+				{% endif %}
+			</ul>
+		</nav>
+	</header>
+  {% endblock %}
+  <main id="main">
+    {% block content %}
+    {% endblock %}
+  </main>
+</body>
+</html>

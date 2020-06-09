@@ -1,0 +1,84 @@
+.blue-background {
+    background-color: #0077AF;
+	}
+.crimson-background {
+	background-color: #d41a3d;
+}
+.green-background {
+	background-color: #00A87A;
+}
+h1 {
+	text-align : center;
+	/*font-size: 32pt;*/
+	font-family: 'Merienda', cursive;
+	color: white;
+	margin-top: 6rem;
+	margin-bottom: 10px;
+}
+p {
+    text-align: center;
+    margin-top: 0;
+    font-size: 17px;
+    color: white;
+	  font-family: 'Rubik', sans-serif;
+}
+#add-book-form {
+		display: flex;
+    flex-direction: column;
+    margin-left: 25%;
+    margin-right: 25%;
+    margin-top: 2rem;
+    font-size: 17px;
+    color: white;
+    border-radius: 15px;
+    font-family: 'Rubik', sans-serif;
+}
+label {
+	display: flex;
+	text-align: center;
+	padding-bottom: 5px;
+}
+ul#id_genre {
+    list-style: none;
+    padding-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+#id_genre li {
+    padding: 5px;
+}
+.form-fields {
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 1rem;
+}
+.form-control {
+	width: 100%;
+	height: auto;
+	padding: 10px;
+	border-radius: 10px;
+}
+.checkbox-input {
+  /* width: 20px;
+	height: 16px; */
+	/* margin-right: 15px; */
+}
+#id_language {
+  width: 100%;
+	height: auto;
+	padding: 10px;
+	border-radius: 10px;
+  font-size: 14px;
+  font-family: 'Rubik', sans-serif;
+}
+.submit-button {
+    width: 100%;
+    height: auto;
+    font-size: 17px;
+    margin-left: 14px;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+    padding: 7px;
+    color: white;
+}
