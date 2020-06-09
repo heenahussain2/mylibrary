@@ -131,7 +131,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # # Activate Django-Heroku.
 import django_heroku
 django_heroku.settings(locals())
-MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware',]
+MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware']
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 ALLOWED_HOSTS = ['young-harbor-36286.herokuapp.com','127.0.0.1']
