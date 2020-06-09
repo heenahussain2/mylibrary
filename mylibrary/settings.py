@@ -134,4 +134,4 @@ import django_heroku
 django_heroku.settings(locals())
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-ALLOWED_HOSTS = ['young-harbor-36286.herokuapp.com','127.0.0.1']
+ALLOWED_HOSTS = ['mylibrary-django-app.herokuapp.com','127.0.0.1']
