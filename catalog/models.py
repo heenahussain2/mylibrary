@@ -42,7 +42,7 @@ class Book(models.Model):
     # book_owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
-        permissions = (("can_add_book", "Add book to collection"),)
+        permissions = (("can_add_book", "Can add book"),)
 
     def __str__(self):
         """String for representing the Model object."""
@@ -84,7 +84,7 @@ class BookInstance(models.Model):
 
     class Meta:
         ordering = ['added_on']
-        permissions = (("can_delete_book", "Can delete book"),)
+        permissions = (("can_delete_book", "Can delete book instance"),)
 
     def get_absolute_url(self):
         """Returns the url to access a detail record for this book."""

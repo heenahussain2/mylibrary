@@ -7,7 +7,7 @@
 
 {% block content %}
   <div id="main-content">
-    <h1>My Library</h1>
+    <h1><a class="home-page-url" href="{% url 'landing-page' %}">My Library</a></h1>
     <p>Welcome Back ! Sign in to access your account.</p>
     <form method="post" action="{% url 'login' %}" id="login-form" class="green-background">
       {% csrf_token %}

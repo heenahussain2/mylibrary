@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views import generic
+from django.views import generic, View
 from .models import Book, Author, Genre, Language
 from .models import BookInstance
 from django.contrib.auth.decorators import login_required, permission_required
@@ -9,32 +9,55 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from catalog.forms import AddBookForm, SignUpForm
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 # Create your views here.
 # from catalog.models import Book, Author, BookInstance, Genre
 
-def landing_page(request):
-    """
-    Landing Page will contain signup form
-    """
-    if request.method=='POST':
+class LandingPageView(View):
+    def get(self, request):
+        form = SignUpForm(initial ={})
+        return render(request, 'landing_page.html', {'form': form})
+
+    def post(self, request):
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user_obj = form.save()
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password1')
-            group = Group.objects.get(name="Library Members")
-            user_obj.groups.add(group)
+            ## if form is valid then create a new user
+            self.add_new_user(form)
             ## USer Authentication Part
-            # user = authenticate(username=username, password=password)
-            # login(request, user)
-            # return redirect('login')
-            return HttpResponseRedirect(reverse('login'))
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('index')
 
-    else:
-        form = SignUpForm(initial ={})
-    return render(request, 'landing_page.html', {'form': form})
-    # return render(request, 'landing_page.html', context=context)
+    def add_new_user(self, form):
+        user_obj = form.save()
+        group_name = "Library Members"
+        try:
+            group = Group.objects.get(name=group_name)
+        except Group.DoesNotExist:
+            ## Exception only ifgroup doesnot exist
+            group = self.create_new_group(group_name)
+        user_obj.groups.add(group)
+        self.add_user_permissions(group, user_obj)
+
+    def add_user_permissions(self, group, user_obj):
+        for each_perm in group.permissions.all():
+            user_obj.user_permissions.add(each_perm)
+
+    def create_new_group(self, group_name):
+        permissions_to_add = ["Can add book", "Can view book", "Can change book",
+                              "Can add book instance","Can delete book instance",
+                              "Can view book instance","Can change book instance"]
+        group = Group.objects.create(name=group_name)
+        group.save()
+        for each_permission in permissions_to_add:
+            try:
+                perms = Permission.objects.get(name=each_permission)
+                group.permissions.add(perms)
+            except Exception:
+                print(each_permission)
+        return group
 
 @login_required
 def home_page(request):
