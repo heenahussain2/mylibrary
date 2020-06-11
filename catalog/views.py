@@ -89,7 +89,7 @@ class BookDetailView(generic.DetailView):
     def get_queryset(self):
         return BookInstance.objects.filter(book_owner=self.request.user)
 
-@permission_required('catalog.can_add_book')
+# @permission_required('catalog.can_add_book')
 def add_book_collection(request):
     # import pdb; pdb.set_trace()
     # If this is a POST request then process the Form data
