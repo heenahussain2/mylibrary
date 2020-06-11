@@ -70,9 +70,10 @@ def home_page(request):
     }
     return render(request, 'index.html', context=context)
 
-class BookListView(PermissionRequiredMixin,LoginRequiredMixin, generic.ListView):
+# class BookListView(PermissionRequiredMixin,LoginRequiredMixin, generic.ListView):
+class BookListView(LoginRequiredMixin, generic.ListView):
     login_url = '/accounts/login/'
-    permission_required = 'catalog.can_add_book'
+    # permission_required = 'catalog.can_add_book'
     # redirect_field_name = "/home/"
     model = BookInstance
     template_name ='catalog/book_list.html'
