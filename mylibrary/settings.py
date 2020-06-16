@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '!yb@3m#2&+r^&lp)%0c!1@t$&!+sy!pof42^c)rpfud*s=bp7h'
 # SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '!yb@3m#2&+r^&lp)%0c!1@t$&!+sy!pof42^c)rpfud*s=bp7h')
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+DEBUG = True
 # DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 # Application definition
 ALLOWED_HOSTS = []
@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'catalog',
+    'wishlist',
 ]
 
 MIDDLEWARE = [
@@ -122,17 +123,17 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # SESSION_COOKIE_SECURE = True
 
 # Heroku: Update database configuration from $DATABASE_URL.
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
-
-# # Simplified static file serving.
-# # https://warehouse.python.org/project/whitenoise/
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-# # Activate Django-Heroku.
-import django_heroku
-django_heroku.settings(locals())
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-ALLOWED_HOSTS = ['mylibrary-django-app.herokuapp.com','127.0.0.1']
-DEBUG = False
+# import dj_database_url
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES['default'].update(db_from_env)
+#
+# # # Simplified static file serving.
+# # # https://warehouse.python.org/project/whitenoise/
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# # # Activate Django-Heroku.
+# import django_heroku
+# django_heroku.settings(locals())
+# PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# ALLOWED_HOSTS = ['mylibrary-django-app.herokuapp.com','127.0.0.1']
+# DEBUG = False

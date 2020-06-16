@@ -19,9 +19,9 @@
 			<ul class="main-list">
 				<!-- <li><a href="{% url 'logout'%}?next={{request.path}}" class="nav-link">Logout</a></li> -->
 				<li><a href="{% url 'index' %}" class="nav-link">Home</a></li>
-				<li><a href="my_library_about.html" class="nav-link">About</a></li>
 				<li><a href="{% url 'books' %}" class="nav-link">My Collection</a></li>
-				<li><a href="#" class="nav-link">Wishlist</a></li>
+				<li><a href="{% url 'wishlist-initial' %}" class="nav-link">Wishlist</a></li>
+				<li><a href="#" class="nav-link">Blogs</a></li>
 			</ul>
 			<ul class="side-list">
 				<li><a href="{% url 'logout'%}" class="nav-link">Logout</a></li>

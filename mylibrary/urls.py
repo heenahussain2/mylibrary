@@ -18,6 +18,7 @@ from django.urls import path, include
 urlpatterns = [
 
     path('',include('catalog.urls')),
+    path('wishlist/', include('wishlist.urls')),
     path('admin/', admin.site.urls),
 ]
 
