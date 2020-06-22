@@ -11,18 +11,22 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from dotenv import load_dotenv
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+
+## Load the .env file for local environment variables
+load_dotenv()
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '!yb@3m#2&+r^&lp)%0c!1@t$&!+sy!pof42^c)rpfud*s=bp7h'
-# SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '!yb@3m#2&+r^&lp)%0c!1@t$&!+sy!pof42^c)rpfud*s=bp7h')
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+DEBUG = bool(os.getenv("DEBUG",False))
+## Allowed hosts
+ALLOWED_HOSTS = ['mylibrary-django-app.herokuapp.com','127.0.0.1']
+
 # Application definition
-ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -117,23 +121,17 @@ LOGIN_REDIRECT_URL = '/home/'
 # To allow testing: This logs any emails sent to the console (so you can copy the password reset link from the console).
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-#Set this to True to avoid transmitting the CSRF cookie over HTTP accidentally.
-# CSRF_COOKIE_SECURE = True
-#Set this to True to avoid transmitting the session cookie over HTTP accidentally.
-# SESSION_COOKIE_SECURE = True
-
+##### For deployment to production
 # Heroku: Update database configuration from $DATABASE_URL.
-# import dj_database_url
-# db_from_env = dj_database_url.config(conn_max_age=500)
-# DATABASES['default'].update(db_from_env)
-#
-# # # Simplified static file serving.
-# # # https://warehouse.python.org/project/whitenoise/
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-# # # Activate Django-Heroku.
-# import django_heroku
-# django_heroku.settings(locals())
-# PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# ALLOWED_HOSTS = ['mylibrary-django-app.herokuapp.com','127.0.0.1']
-# DEBUG = False
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
+# Simplified static file serving. - For serving static files in production
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+## Activate Django-Heroku. - for django settings on heroku
+import django_heroku
+django_heroku.settings(locals())
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

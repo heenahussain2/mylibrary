@@ -6,3 +6,6 @@
 
 # Compiled files
 *.pyc
+
+## env files
+.env

@@ -10,10 +10,20 @@
   <div id="welcome-heading">
     <h2>Welcome to</h2>
     <h1>My Library</h1>
-    <div id="small-button-grid">
-      <div class="view-details"><a href="my_library_about.html" class="button">Know More</a></div>
-      <div class="view-details"><a href="#about-section" class="button">Get Started</a></div>
-    </div>
+    <!-- <div id="small-button-grid"> -->
+      <!-- <div class="view-details"><a href="my_library_about.html" class="button">Know More</a></div> -->
+      {% if num_books > 0 %}
+          <form class="view-details" action="{% url 'books' %}" method="get">
+            <input type="submit" class="button-class green-background" value="View Collection">
+          </form>
+        <!-- <div class="view-details"><a href="{% url 'books' %}" class="button">View Collection</a></div> -->
+      {% else %}
+          <form class="view-details" action="{% url 'add-book' %}" method="get">
+            <input type="submit" class="button-class green-background" value="Add a Book">
+          </form>
+        <!-- <div class="view-details"><a href="{% url 'add-book' %}" class="button">Add a Book</a></div> -->
+      {% endif %}
+    <!-- </div> -->
   </div>
   <div id="welcome-img">
     <img src="https://images.unsplash.com/photo-1543248939-4296e1fea89b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="image of a bookshelf">

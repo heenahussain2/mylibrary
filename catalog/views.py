@@ -15,8 +15,11 @@ from django.contrib.auth.models import Group, Permission
 
 class LandingPageView(View):
     def get(self, request):
-        form = SignUpForm(initial ={})
-        return render(request, 'landing_page.html', {'form': form})
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            form = SignUpForm(initial ={})
+            return render(request, 'landing_page.html', {'form': form})
 
     def post(self, request):
         form = SignUpForm(request.POST)
@@ -63,10 +66,14 @@ class LandingPageView(View):
 def home_page(request):
     context = {}
     ## Number of visits to this view as counted by the session object
-    num_visits = request.session.get("num_visits",0)
-    request.session["num_visits"] = num_visits + 1
+    # num_visits = request.session.get("num_visits",0)
+    # request.session["num_visits"] = num_visits + 1
+    ### Get the number of books in user's collection
+    num_books = len(BookInstance.objects.filter(book_owner=request.user))
     context = {
-        "num_visits" : num_visits
+        # "num_visits" : num_visits
+        "num_books": num_books
+
     }
     return render(request, 'index.html', context=context)
 
