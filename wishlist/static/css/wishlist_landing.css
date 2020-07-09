@@ -1,0 +1,65 @@
+#main-container {
+  display: grid;
+  grid-auto-rows: 200px;
+  grid-template-columns: repeat(2,1fr);
+  justify-content: center;
+  margin: 6.5rem 9rem 1.5rem 20rem;
+  grid-row-gap: 30px;
+  grid-column-gap: 4rem;
+}
+.book-list {
+	border-radius: 20px;
+  display: grid;
+  grid-template-columns: 0.5fr 1fr;
+  grid-template-rows: 1fr;
+  grid-column-gap: 14px;
+}
+.book-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.book-content a {
+  text-decoration: none;
+}
+.book-content a:hover {
+  text-decoration: underline;
+  color: white;
+}
+.book-image{
+  border-radius: 20px;
+  height: 200px;
+}
+.book-title {
+    font-size: 20pt;
+    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.92);
+    font-family: 'Noto Sans TC', sans-serif;
+    /* text-align: center; */
+}
+.book-author {
+    padding-bottom: 15px;
+    font-size: 13pt;
+    color: rgba(255, 255, 255, 0.92);
+    font-family: 'Rubik', sans-serif;
+    text-align: center;
+}
+.delete-book {
+  text-align: center;
+  font-size: 15px;
+  font-family: 'Rubik', sans-serif;
+}
+.delete-book a {
+  color: white;
+}
+.delete-book a:hover {
+  color: #d20e0e; /*a variation of red color */
+  font-weight: bold;
+}
+p.no-books {
+  text-align: center;
+  margin-top: 10rem;
+  font-size: 24pt;
+  color: white;
+  font-family: 'Noto Sans TC', sans-serif;
+}

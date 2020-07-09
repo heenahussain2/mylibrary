@@ -1,1 +1,30 @@
 {% extends 'base_generic.html' %}
+
+{% block cssfiles %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/wishlist_landing.css' %}" type="text/css">
+{% endblock %}
+
+{% block content %}
+    {% if book_data_list %}
+        <div id="main-container">
+            {% for each_book in book_data_list %}
+                {% if each_book.actual_book_title != "" %}
+                    <section class="book-list blue-background">
+                        <img class="book-image" src="{{ each_book.book_image_links.thumbnail }}" alt="{{ each_book.actual_book_title }}">
+                        <div class="book-content">
+                            <a href="{{ each_book.bookinstance_obj.get_absolute_url }}"><h3 class="book-title">{{ each_book.actual_book_title }}</h3></a>
+                            <div class="book-author">Author - {{ each_book.wishlist_instance_obj.book.author }}</div>
+                            <div class="book-decsription">{{ each_book.descrition }}</div>
+                            <!-- <div class="delete-book"><a href="{{ book_inst.get_delete_url }}">Delete Book</a></div> -->
+                            <div class="delete-book"><a href="#">Delete Book</a></div>
+                        </div>
+                    </section>
+                {% endif %}
+            {% endfor %}
+    {% else %}
+        <p class="no-books">Sorry! No Books Added</p>
+    {% endif %}
+  </div>
+
+{% endblock %}
