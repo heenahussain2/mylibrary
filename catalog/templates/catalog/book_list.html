@@ -6,26 +6,41 @@
 {% endblock %}
 
 {% block content %}
-  <div id="add-book-button"><a href="{% url 'add-book' %}" class='add-book-link'>Add a book</a></div>
-  <h1>My Collection</h1>
-  {% if bookinstance_list %}
-  <div  id="main-container">
-    {% if perms.catalog.can_add_book %}
-    <!-- We can Add  book to the collection. -->
-    <!-- Perhaps add code to link to a "add book" view here. -->
-    {% endif %}
-    {% for book_inst in bookinstance_list %}
-        {% if book_inst.book.title != None %}
-          <section class="book-list blue-background">
-              <a href="{{ book_inst.get_absolute_url }}"><h3 class="book-title">{{ book_inst.book.title }}</h3></a>
-              <div class="book-author">Author - {{ book_inst.book.author }}</div>
-              <div class="delete-book"><a href="{{ book_inst.get_delete_url }}">Delete Book</a></div>
-          </section>
-        {% endif %}
-    {% endfor %}
-  </div>
+  {% if book_data_list %}
+      <div id="main-container">
+            {% for each_book in book_data_list %}
+                {% if each_book.actual_book_title != "" %}
+                  <section class="book-list blue-background">
+                      <img class="book-image" src="{{ each_book.book_image_links.thumbnail }}" alt="{{ each_book.actual_book_title }}">
+                      <div class="book-content">
+                          <a href="{{ each_book.bookinstance_obj.get_absolute_url }}"><h3 class="book-title">{{ each_book.actual_book_title }}</h3></a>
+                          <div class="book-author">Author - {{ each_book.bookinstance_obj.book.author }}</div>
+                          <div class="delete-book"><a href="{{ each_book.bookinstance_obj.get_delete_url }}">Delete Book</a></div>
+                      </div>
+                  </section>
+                {% endif %}
+          {% endfor %}
+      </div>
   {% else %}
       <p class="no-books">Sorry! No Books Added</p>
   {% endif %}
+  <!-- this part is for pagination -->
+  {% if book_data_list.has_other_pages %}
+        <ul class="pagination">
+            {% if book_data_list.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ book_data_list.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+            <li class="page-item">
+                <a class="page-link" href="#">Page {{ book_data_list.number }} of {{ book_data_list.paginator.num_pages }}</a>
+            </li>
+            {% if book_data_list.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ book_data_list.next_page_number }}">Next</a>
+                </li>
+            {% endif %}
+      </ul>
+{% endif %}
 
 {% endblock %}

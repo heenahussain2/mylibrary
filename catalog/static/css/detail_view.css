@@ -2,37 +2,123 @@
 		background-color: #0077AF;
 	}
 #main-container {
-			display: flex;
-			flex-direction: column;
-			margin: 7rem 10rem;
-    	border-radius: 10px;
-    	color: rgba(255, 255, 255, 0.89);
-		}
+	display: flex;
+	flex-direction: column;
+	margin: 4rem 8rem 5rem 16rem;
+	/* border-radius: 10px; */
+	color: rgba(255, 255, 255, 0.89);
+}
 
-		h1 {
-		    margin-top: 0;
-		    text-align: center;
-		    font-size: 30pt;
-		    font-family: 'Merienda', cursive;
-		    padding-top: 2rem;
-		}
-		.book-author {
-		    padding-bottom: 15px;
-		    font-size: 14pt;
-		    font-family: 'Rubik', sans-serif;
-		    text-align: center;
-		}
-		.book-summary {
-		    font-size: 14pt;
-		    padding-right: 20px;
-		    padding-bottom: 20px;
-		    text-align: justify;
-		    line-height: 22px;
-		    font-family: 'Rubik', sans-serif;
-		    margin: 2rem 8rem 1rem 8rem;
-		}
-		.other-details {
-			font-size: 14pt;
-		  font-family: 'Rubik', sans-serif;
-		  margin: 1rem 8rem;
-		}
+h1 {
+	margin-top: 0;
+	text-align: center;
+	font-size: 27pt;
+	font-family: 'Merienda', cursive;
+	padding-top: 0;
+	margin-bottom: 1rem;
+}
+h3 {
+  margin-left: 2rem;
+  margin-bottom: 0;
+  font-size: 22px;
+  font-family: 'Rubik',sans-serif;
+}
+.book-author {
+  padding-bottom: 15px;
+  font-size: 14pt;
+  font-family: 'Rubik', sans-serif;
+  text-align: center;
+}
+#book-description {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 0.5fr 1fr;
+  justify-content: center;
+  margin: 2rem 2rem 1rem 2rem;
+}
+.book-image {
+  width: 200px;
+	height: 280px;
+  align-self: flex-start;
+  margin-top: 3rem;
+ }
+ .book-desc-list {
+  display: grid;
+  /* grid-auto-rows: 1fr; */
+  grid-template-columns: 0.25fr 1fr;
+  font-family: 'Rubik',sans-serif;
+  line-height: 1.5;
+  font-size: 16px;
+  grid-column-gap: 20px;
+  margin-top: 1rem;
+}
+a.gbooks-link {
+	color: aquamarine;
+}
+#tags-grid {
+  display: grid;
+  grid-auto-rows: 1fr;
+  grid-template-columns: repeat(6,1fr);
+  grid-gap: 24px;
+  margin: 1rem 2rem;
+  font-size: 17px;
+  font-family: 'Rubik', sans-serif;
+}
+.tags {
+  padding: 7px;
+  text-align: center;
+  border-radius: 20px;
+}
+.book-summary {
+  font-size: 13pt;
+  padding-right: 20px;
+  /*padding-bottom: 20px;*/
+  text-align: justify;
+  line-height: 1.5;
+  font-family: 'Rubik', sans-serif;
+  margin: 1rem 2rem;
+}
+#review-form {
+  margin-left: 2rem;
+  margin-top: 1rem;
+}
+p.review-text {
+  font-size: 17px;
+  font-family: 'Rubik',sans-serif;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+textarea#review {
+    width: 50%;
+    height: 145px;
+    border-radius: 20px;
+    padding: 20px;
+    font-family: 'Rubik',sans-serif;
+}
+.submit-button {
+  margin-top: 15px;
+  margin-left: 1rem;
+  width: 20%;
+  border-radius: 20px;
+  font-size: 15px;
+  padding: 9px;
+  color:white;
+}
+p.not-found {
+  margin: 2rem;
+  font-size: 18px;
+  font-family: 'Rubik',sans-serif;
+  color: aqua;
+  align-self: flex-start;
+}
+a.buy-links {
+    text-decoration: none;
+    margin: 0.5rem 0rem 0.5rem 2rem;
+    color: white;
+    font-size: 17px;
+    font-family: 'Rubik',sans-serif;
+}
+a.buy-links:hover {
+	text-decoration: underline;
+	color:aqua;
+}

@@ -1,68 +1,54 @@
-.crimson-background {
-  background-color: #d41a3d;
-}
-.green-background {
-  background-color: #00A87A;
-}
-.blue-background {
-  background-color: #0077AF;
-}
-#add-book-button {
-    margin-top: 1rem;
-    float: right;
-    margin-right: 3rem;
-}
-a.add-book-link {
-  text-decoration: none;
-  color: white;
-  font-family: 'Noto Sans TC', sans-serif;
-  font-size: 18px;
-}
-a.add-book-link:hover {
-  text-decoration: underline;
-}
-h1 {
-    margin-top: 7rem;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.89);
-    font-size: 30pt;
-    font-family: 'Merienda', cursive;
-}
 #main-container {
-			display: grid;
-			grid-auto-rows: 200px;
-			grid-template-columns: repeat(3,1fr);
-			grid-gap: 30px;
-			justify-content: center;
-			margin: 2rem 5rem;
+  display: grid;
+  grid-auto-rows: 200px;
+  grid-template-columns: repeat(3,1fr);
+  justify-content: center;
+  margin: 5.5rem 3rem 1.5rem 16rem;
+  grid-row-gap: 30px;
+  grid-column-gap: 2rem;
 }
 .book-list {
 	border-radius: 20px;
+  display: grid;
+  grid-template-columns: 0.5fr 1fr;
+  grid-template-rows: 1fr;
+  grid-column-gap: 10px;
 }
-.book-list a {
+.book-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.book-content a {
   text-decoration: none;
 }
-.book-list a:hover {
+.book-content a:hover {
   text-decoration: underline;
   color: white;
 }
+.book-image{
+  border-radius: 20px;
+  height: 200px;
+}
 .book-title {
-    font-size: 23pt;
-    margin-bottom: 15px;
+    font-size: 16pt;
+    margin-bottom: 10px;
+    margin-top: 10px;
     color: rgba(255, 255, 255, 0.92);
     font-family: 'Noto Sans TC', sans-serif;
-    text-align: center;
+    /* text-align: center; */
 }
 .book-author {
     padding-bottom: 15px;
-    font-size: 14pt;
+    font-size: 13pt;
     color: rgba(255, 255, 255, 0.92);
     font-family: 'Rubik', sans-serif;
-    text-align: center;
+    text-align: left;
+    /* text-align: center; */
 }
 .delete-book {
   text-align: center;
-  font-size: 16px;
+  font-size: 15px;
   font-family: 'Rubik', sans-serif;
 }
 .delete-book a {
@@ -73,9 +59,29 @@ h1 {
   font-weight: bold;
 }
 p.no-books {
-  text-align: center;
-  margin-top: 6rem;
+  margin-left: 35%;
+  margin-top: 10rem;
   font-size: 24pt;
   color: white;
   font-family: 'Noto Sans TC', sans-serif;
+}
+/* for pagination */
+
+ul.pagination {
+  display: flex;
+  list-style: none;
+  color: white;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem
+  }
+li.page-item {
+    border: 2px solid #bbb;
+    padding: 12px;
+    font-size: 17px;
+    font-family: 'Rubik',sans-serif;
+}
+a.page-link {
+  text-decoration: none;
+  color: white;
 }

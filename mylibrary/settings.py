@@ -25,7 +25,14 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 DEBUG = bool(os.getenv("DEBUG",False))
 ## Allowed hosts
 ALLOWED_HOSTS = ['mylibrary-django-app.herokuapp.com','127.0.0.1']
-
+## Google Books API key
+GOOGLE_BOOKS_API_KEY = os.getenv("GOOGLE_BOOKS_API_KEY")
+## Idream books api for critic reviews
+IDREAM_BOOKS_API_KEY = os.getenv("IDREAM_BOOKS_API_KEY")
+## API KEy for NY TIMES Book review
+NYTIMES_API_KEY = os.getenv("NYTIMES_API_KEY")
+## Mongodb Atlas password
+MONGO_PASSWORD = os.getenv("MONGO_PASSWORD")
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',

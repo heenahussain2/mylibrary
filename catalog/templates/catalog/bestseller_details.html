@@ -1,0 +1,72 @@
+{% extends 'base_generic.html'%}
+
+{% block cssfiles %}
+{% load static %}
+  <link rel="stylesheet" href="{% static 'css/detail_view.css' %}" type="text/css">
+{% endblock %}
+
+{% block content %}
+  <div id="main-container">
+    <h1>{{ book_obj.title }}</h1>
+    <div class="book-author">Author - {{ book_obj.author }}</div>
+    <div id="book-description">
+      {% if nytimes_data.book_image %}
+			   <img class="book-image" src="{{ nytimes_data.book_image }}">
+      {% else %}
+          <img class="book-image" src="{{ google_books_data.book_image_links.thumbnail }}">
+      {% endif %}
+			<div class="book-desc-list">
+				<p><strong>Description:</strong></p>
+        {% if nytimes_data.description %}
+            <p>{{ nytimes_data.description}} </p>
+        {% else %}
+            <p>Data not Available</p>
+        {% endif %}
+				<p><strong>Language:</strong></p>
+				<p>English</p>
+				<p><strong>Rank</strong></p>
+				<p>{{ nytimes_data.book_rank }}</p>
+        <p><strong>Rank Last Week</strong></p>
+				<p>{{ nytimes_data.rank_last_week }}</p>
+        <p><strong>Weeks on List</strong></p>
+				<p>{{ nytimes_data.weeks_on_list }}</p>
+				<p><strong>Average Rating:</strong></p>
+        {% if google_books_data.average_rating %}
+				    <p>{{ google_books_data.average_rating }} (<a class="gbooks-link" target="_blank" href="{{ google_books_data.preview_link }}">Google Books Rating</a>)</p>
+        {% else %}
+            <p>Data not Available</p>
+        {% endif %}
+			</div>
+		</div>
+    <h3>Tags</h3>
+		<div id="tags-grid">
+      {% for each_genre in google_books_data.genre %}
+			<span class="tags blue-background">{{ each_genre }}</span>
+      {% endfor %}
+		</div>
+		<h3>Google Books Description</h3>
+		<div class="book-summary">
+			{{ google_books_data.description }}
+		</div>
+    <h3>NY Times Book Review</h3>
+    {% if nytimes_review %}
+        {% for each_review in nytimes_review %}
+          <div id="review-box">
+            <a href="{{ each_review.review_url }}">{{ each_review.summary }}</a>
+            <p>by - {{ each_review.review_by }}<p>
+            <p>Publication Date - {{ each_review.publication_date }}</p>
+          </div>
+        {% endfor %}
+    {% else %}
+        <p class="not-found" >No Review Available</p>
+    {% endif %}
+    <h3>Buy Links</h3>
+    {% if nytimes_data.buy_links %}
+        {% for each_link in nytimes_data.buy_links %}
+            <a href="{{ each_link.url }}" class="buy-links">{{ each_link.name }}</a>
+        {% endfor %}
+    {% else %}
+        <p class="not-found" >No Links Found</p>
+    {% endif %}
+  </div>
+{% endblock %}

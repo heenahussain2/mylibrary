@@ -7,50 +7,35 @@
 
 {% block content %}
     <div id="main-container">
-    <h1>My Library</h1>
-    <p>Fill the below form to add a book to your collection.</p>
-    <form action="" method="post" id='add-book-form' class="green-background">
-      {% csrf_token %}
-      <div class="form-fields">
-          {{ form.book_title.errors }}
-    			<label for="id_book_title">Title</label>
-          {{ form.book_title }}
-    	</div>
-      <div class="form-fields">
-        <label for="id_author_firstname">Author</label>
-        {{ form.author_firstname.errors }}
-        {{ form.author_firstname }}
+      <p>Fill the below form to add a book to your collection.</p>
+      <form action="" method="post" id='add-book-form' class="green-background">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="form-fields">
+            {{ form.book_title.errors }}
+      			<label for="id_book_title">Title</label>
+            {{ form.book_title }}
+      	</div>
+        <div class="form-fields author-field">
+          <label for="id_author_firstname">Author</label>
+          {{ form.author_firstname.errors }}
+          {{ form.author_firstname }}
+          {{ form.author_lastname.errors }}
+          {{ form.author_lastname }}
       </div>
-      <div class="form-fields">
-        {{ form.author_lastname.errors }}
-        {{ form.author_lastname }}
+        <div class="form-fields">
+            {{ form.language.errors }}
+      			<label for="id_language">Language</label>
+            {{ form.language }}
+      	</div>
+        <div class="form-fields">
+            {{ form.summary.errors }}
+      			<label for="id_summary">Summary</label>
+            {{ form.summary }}
+      	</div>
+        <div class="form-fields submit-btn">
+          <input type="submit" value="Add Book" class="submit-button crimson-background">
+        </div>
+      </form>
       </div>
-      <div class="form-fields">
-          {{ form.isbn.errors }}
-    			<label for="id_isbn">ISBN No</label>
-          {{ form.isbn }}
-    	</div>
-      <div class="form-fields">
-          {{ form.genre.errors }}
-    			<label for="id_genre">Genre</label>
-          {{ form.genre }}
-    	</div>
-      <div class="form-fields">
-          {{ form.language.errors }}
-    			<label for="id_language">Language</label>
-          {{ form.language }}
-    	</div>
-      <div class="form-fields">
-          {{ form.summary.errors }}
-    			<label for="id_summary">Summary</label>
-          {{ form.summary }}
-    	</div>
-      <div class="form-fields">
-        <input type="submit" value="Add Book" class="submit-button crimson-background">
-      </div>
-      <!-- <table>
-      {{ form.as_table }}
-      </table> -->
-    </form>
-    </div>
 {% endblock %}

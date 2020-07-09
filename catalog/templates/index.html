@@ -6,29 +6,36 @@
 {% endblock %}
 
 {% block content %}
-<div id="main-grid">
-  <div id="welcome-heading">
-    <h2>Welcome to</h2>
-    <h1>My Library</h1>
-    <!-- <div id="small-button-grid"> -->
-      <!-- <div class="view-details"><a href="my_library_about.html" class="button">Know More</a></div> -->
-      {% if num_books > 0 %}
-          <form class="view-details" action="{% url 'books' %}" method="get">
-            <input type="submit" class="button-class green-background" value="View Collection">
-          </form>
-        <!-- <div class="view-details"><a href="{% url 'books' %}" class="button">View Collection</a></div> -->
-      {% else %}
-          <form class="view-details" action="{% url 'add-book' %}" method="get">
-            <input type="submit" class="button-class green-background" value="Add a Book">
-          </form>
-        <!-- <div class="view-details"><a href="{% url 'add-book' %}" class="button">Add a Book</a></div> -->
-      {% endif %}
-    <!-- </div> -->
-  </div>
-  <div id="welcome-img">
-    <img src="https://images.unsplash.com/photo-1543248939-4296e1fea89b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="image of a bookshelf">
-    <!-- <a style="background-color:black;color:white;text-decoration:none;padding:4px 6px;font-family:-apple-system, BlinkMacSystemFont, &quot;San Francisco&quot;, &quot;Helvetica Neue&quot;, Helvetica, Ubuntu, Roboto, Noto, &quot;Segoe UI&quot;, Arial, sans-serif;font-size:12px;font-weight:bold;line-height:1.2;display:inline-block;border-radius:3px" href="https://unsplash.com/@vmokry?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge" target="_blank" rel="noopener noreferrer" title="Download free do whatever you want high-resolution photos from Vladimir Mokry"><span style="display:inline-block;padding:2px 3px"><svg xmlns="http://www.w3.org/2000/svg" style="height:12px;width:auto;position:relative;vertical-align:middle;top:-2px;fill:white" viewBox="0 0 32 32"><title>unsplash-logo</title><path d="M10 9V0h12v9H10zm12 5h10v18H0V14h10v9h12v-9z"></path></svg></span><span style="display:inline-block;padding:2px 3px">Vladimir Mokry</span></a> -->
-  </div>
-</div>
-<!-- <p>You have visited this page {{ num_visits }}{% if num_visits == 1 %} time{% else %} times{% endif %}.</p> -->
+    <div id="main-container">
+        <div id="num-books">
+            <p>Books in Collection - {{ num_books_collection }}</p>
+            <p>Books in Wishlist - {{ num_books_wishlist }}</p>
+        </div>
+        <div id="nytimes-books">
+            <h2>New York Times Bestsellers</h2>
+            <p>( {{ from_date }} - {{ to_date }} )</p>
+            {% if nyt_list_data %}
+                <div id="nytbook-grid">
+                    {% for each_book in nyt_list_data %}
+                        <section class="book-list blue-background">
+                            <img class="book-image" src="{{ each_book.book_thumbnail }}" alt="{{ each_book.book_obj.title }}">
+                            <div class="book-content">
+                                <a href="{{ each_book.book_obj.get_bestseller_url }}"><h3 class="book-title">{{ each_book.book_obj.title }}</h3></a>
+                                <div class="book-author">Author - {{ each_book.book_obj.author }}</div>
+                                <div class="book-rank">Rank - {{ each_book.rank }}</div>
+                                <!-- <div class="book-rank">Rank Last Week - {{ each_book.rank_last_week }}</div> -->
+                                <!-- <div class="delete-book"><a href="{{ each_book.bookinstance_obj.get_delete_url }}">Delete Book</a></div> -->
+                            </div>
+                        </section>
+                  {% endfor %}
+                  <section class="view-collection">
+                      <p><a class="view-link" href="#">View Complete List</a></p>
+                  </section>
+                </div>
+            {% else %}
+                <p class="no-books">Sorry! Data Not available</p>
+            {% endif %}
+        </div>
+     </div> <!-- main container ends here -->
 {% endblock %}
+<!-- {{ each_book.book_obj.get_absolute_url }} -->
