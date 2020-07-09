@@ -85,7 +85,7 @@ class NYTimesAPI():
         temp_data["nyt_review"] = []
         if review_json["num_results"] > 0:
             for each_review in review_json["results"]:
-                temp_data["reviews"].append({
+                temp_data["nyt_review"].append({
                     "review_url" : each_review["url"],
                     "review_by" :  each_review["byline"],
                     "summary" : each_review["summary"],
