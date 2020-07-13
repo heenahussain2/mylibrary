@@ -20,22 +20,25 @@ class GoogleBooksAPIData():
             book_data = self.books_coll.find_one({"isbn_13":isbn},{"_id":0})
         return book_data
 
-    def save_mongo_data(self, book_data):
+    def save_mongo_data(self, book_data, nytimes_fiction):
         volume_info = book_data["volumeInfo"]
         data_to_save = {
             "book_title" : volume_info["title"].lower(),
             "actual_book_title" : volume_info["title"],
             "subtitle" : volume_info.get("subtitle",""),
-            "authors" : volume_info["authors"],
-            "publisher": volume_info["publisher"],
-            "description": volume_info["description"],
-            "page_count" : volume_info["pageCount"],
-            "genre" : volume_info["categories"],
+            "authors" : volume_info.get("authors",[]),
+            "publisher": volume_info.get("publisher",""),
+            "description": volume_info.get("description",""),
+            "page_count" : volume_info.get("pageCount",0),
             "average_rating": volume_info.get("averageRating",0),
-            "book_image_links" : volume_info["imageLinks"],
-            "preview_link" :  volume_info["previewLink"],
-            "buy_link" :  volume_info["infoLink"]
+            "book_image_links" : volume_info.get("imageLinks",{"thumbnail":""}),
+            "preview_link" :  volume_info.get("previewLink",""),
+            "buy_link" :  volume_info.get("infoLink","")
         }
+        if not volume_info.get("categories",[]) and nytimes_fiction:
+            data_to_save["genre"] = ["Fiction"]
+        else:
+            data_to_save["genre"] = volume_info.get("categories",[])
         ## for unique_key
         string_to_encode = data_to_save["book_title"] + " " + " ".join([auth.lower() for auth in data_to_save["authors"]])
         data_to_save["unique_book_id"] = str(base64.b64encode(string_to_encode.encode("utf-8")),"utf-8")
@@ -65,7 +68,7 @@ class GoogleBooksAPIData():
             print("Error in getting book from api")
         return book_data
 
-    def get_book_data(self, book_title="", author="",isbn=""):
+    def get_book_data(self, book_title="", author="",isbn="", nytimes_fiction=False):
         saved_book_data = {}
         book_data = {}
         if book_title and author and not isbn:
@@ -84,7 +87,7 @@ class GoogleBooksAPIData():
             if not saved_book_data:
                 book_data = self.get_google_books_data(isbn=isbn)
                 if book_data:
-                    saved_book_data = self.save_mongo_data(book_data)
+                    saved_book_data = self.save_mongo_data(book_data, nytimes_fiction)
         return saved_book_data
 
 # if __name__ == '__main__':

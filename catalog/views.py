@@ -81,7 +81,7 @@ class HomePageView(LoginRequiredMixin, View):
         ### get top 5 book data from google books api and create a book object
         for top_book in nyt_top10:
              temp_data = OrderedDict()
-             google_books_data = GoogleBooksAPIData().get_book_data(isbn=top_book["isbn_13"])
+             google_books_data = GoogleBooksAPIData().get_book_data(isbn=top_book["isbn_13"], nytimes_fiction=True)
              ## Create Book Object for detail view
              if google_books_data:
                  google_books_data["language"] = Language.objects.get(name="English")
