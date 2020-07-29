@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta name="viewport" content="width=device-width,initial-scale=1"/>
 	{% block title %}<title>My Library</title>{% endblock %}
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Signika:wght@600&display=swap" rel="stylesheet">
@@ -16,69 +17,62 @@
 	{% url 'books' as collection_url %}
 	{% url 'wishlist-initial' as wishlist_url %}
 	{% url 'add-book' as add_book_url %}
+	{% url 'bestseller-list' genre='fiction' as bestseller_url_fiction %}
+	{% url 'bestseller-list' genre='non_fiction' as bestseller_url_nonfiction %}
+	{% url 'add-book-wishlist' as add_book_wishlist_url %}
+	{% url 'blog-list' as blogs_url %}
   {% block navigation %}
-	<header id="nav-header">
-		{% if user.is_authenticated %}
-		<nav id="navbar-inside" class="navbar">
-			<ul class="main-list">
-				<!-- <li><a href="{% url 'logout'%}?next={{request.path}}" class="nav-link">Logout</a></li> -->
-				<li class="{% if request.path == home_url %}active-link{% endif %}"><a href="{% url 'index' %}" class="nav-link">Home</a></li>
-				<li class="{% if request.path == collection_url %}active-link{% endif %}"><a href="{% url 'books' %}" class="nav-link">My Collection</a></li>
-				<li class="{% if request.path == wishlist_url %}active-link{% endif %}"><a href="{% url 'wishlist-initial' %}" class="nav-link">Wishlist</a></li>
-				<li><a href="#" class="nav-link">Blogs</a></li>
-			</ul>
-			<ul class="side-list">
-				<li><a href="{% url 'logout'%}" class="nav-link">Logout</a></li>
-				<li><a href="#" class="nav-link">{{ user.username }}</a></li>
-			</ul>
-		</nav>
-		{% else %}
-		<nav id="navbar-outside" class="navbar">
-			<ul>
-				<li><a href="{% url 'login'%}" class="nav-link">Login</a></li>
-				<li><a href="{% url 'landing-page'%}" class="nav-link">Sign Up</a></li>
-			</ul>
-				<!-- <li><a href="{% url 'login'%}" class="nav-link">Sign Up</a></li> -->
-				<!-- <li><a href="{% url 'login'%}?next={{request.path}}" class="nav-link">Login</a></li> -->
-				{% endif %}
-			</ul>
-		</nav>
-	</header>
-  {% endblock %}
-  <main id="main">
-		{% if user.is_authenticated %}
-			<div id="side-navbar">
-				<h1 class="side-heading"><a class="home-link" href="{%url 'index' %}">My Library</a></h1>
-				{% if request.path == home_url %}
-					<ul>
-		        <li class="crimson-background"><a class="sidenav-link" href="{% url 'add-book' %}">Add Book to Collection</a></li>
-		        <li class="crimson-background"><a class="sidenav-link" href="#">Add book to Wishlist</a></li>
+			{% if user.is_authenticated %}
+			<header id="nav-header">
+				<nav id="navbar-inside" class="navbar">
+					<ul class="main-list">
+						<!-- <li><a href="{% url 'logout'%}?next={{request.path}}" class="nav-link">Logout</a></li> -->
+						<h1 class="side-heading"><a class="home-link" href="{%url 'index' %}">My Library</a></h1>
+						<li class="{% if request.path == home_url %}active-link{% endif %}"><a href="{% url 'index' %}" class="nav-link">Home</a></li>
+						<li class="{% if request.path == collection_url %}active-link{% endif %}"><a href="{% url 'books' %}" class="nav-link">My Collection</a></li>
+						<li class="{% if request.path == wishlist_url %}active-link{% endif %}"><a href="{% url 'wishlist-initial' %}" class="nav-link">Wishlist</a></li>
+						<li class="{% if request.path == blogs_url %}active-link{% endif %}"><a href="{% url 'blog-list' %}" class="nav-link">Blogs</a></li>
 					</ul>
-				{% endif %}
-				{% if request.path == collection_url %}
-					<ul>
-						<li class="crimson-background"><a class="sidenav-link" href="{% url 'add-book' %}">Add Book to Collection</a></li>
-						<li class="crimson-background"><a class="sidenav-link" href="#">Add book to Wishlist</a></li>
+					<ul class="side-list">
+						<li><a href="{% url 'logout'%}" class="nav-link">Logout</a></li>
+						<li><a href="#" class="nav-link">{{ user.username }}</a></li>
 					</ul>
-				{% endif %}
-				{% if request.path == wishlist_url %}
+				</nav>
+			</header>
+			{% else %}
+			<!-- <nav id="navbar-outside" class="navbar">
 				<ul>
-						<li class="crimson-background"><a class="sidenav-link" href="{% url 'add-book' %}">Add Book to Collection</a></li>
-						<li class="crimson-background"><a class="sidenav-link" href="#">Add book to Wishlist</a></li>
-				</ul>
-				{% endif %}
-				{% if request.path == add_book_url %}
-					<ul>
-						<li class="crimson-background"><a class="sidenav-link" href="{% url 'books' %}">Go to Collection</a></li>
-						<li class="crimson-background"><a class="sidenav-link" href="#">Add book to Wishlist</a></li>
-						<li class="crimson-background"><a class="sidenav-link" href="{% url 'wishlist-initial' %}">Go to Wishlist</a></li>
-					</ul>
-				{% endif %}
-			</div>
+					<li><a href="{% url 'login'%}" class="nav-link">Login</a></li>
+					<li><a href="{% url 'landing-page'%}" class="nav-link">Sign Up</a></li>
+				</ul> -->
+					<!-- <li><a href="{% url 'login'%}" class="nav-link">Sign Up</a></li>
+					<li><a href="{% url 'login'%}?next={{request.path}}" class="nav-link">Login</a></li> -->
+			<!-- </nav> -->
 		{% endif %}
-    {% block content %}
+  {% endblock %}
+  <main>
+		{% if user.is_authenticated %}
+		<div id='main'>
+			<div id="side-navbar">
+				<ul>
+					{% block side_navbar %}
+			      <li {% if request.path == home_url %}class="side-active-link"{% endif %}><a class="sidenav-link" href="{% url 'index' %}">Recently Added</a></li>
+			      <li {% if request.path == bestseller_url_fiction or request.path == bestseller_url_nonfiction %}class="side-active-link"{% endif %}><a class="sidenav-link" href="{% url 'bestseller-list' genre='fiction'%}">New York Times Bestsellers</a></li>
+			      <li {% if request.path == add_book_url %}class="side-active-link"{% endif %}><a class="sidenav-link" href="{% url 'add-book' %}">Add Book to Collection</a></li>
+			      <li {% if request.path == add_book_wishlist_url %}class="side-active-link"{% endif %}><a class="sidenav-link" href="{% url 'add-book-wishlist' %}">Add book to Wishlist</a></li>
+					{% endblock %}
+		    </ul>
+			</div>
+			<div id="main-container">
+					{% block content_inside %}
+					{% endblock %}
+			</div>
+		</div>
+		{% else %}
+    	{% block content %}
+    	{% endblock %}
+		{% endif %}
 
-    {% endblock %}
   </main>
 </body>
 </html>

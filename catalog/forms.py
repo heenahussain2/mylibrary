@@ -58,9 +58,9 @@ class AddBookForm(forms.Form):
 class SignUpForm(UserCreationForm):
 # class SignUpForm(forms.Form):
     first_name = forms.CharField(max_length=30, required=True,
-                                widget= forms.TextInput(attrs={"placeholder":"First Name", "class":"form-control"}))
+                                widget= forms.TextInput(attrs={"placeholder":"First Name", "class":"name-form-control"}))
     last_name = forms.CharField(max_length=30, required=True,
-                                widget= forms.TextInput(attrs={"placeholder":"Last Name", "class":"form-control"}))
+                                widget= forms.TextInput(attrs={"placeholder":"Last Name", "class":"name-form-control"}))
     email = forms.EmailField(max_length=254,required=False,
                             widget=forms.EmailInput(attrs={"placeholder":"Enter Your Email", "class":"form-control"}))
     def __init__(self, *args, **kwargs):
@@ -79,3 +79,14 @@ class SignUpForm(UserCreationForm):
                     'first_name': "First Name",
                     'last_name':"Last Name",
                 }
+
+class BookReviewForm(forms.Form):
+    user_book_review = forms.CharField(max_length=1000,
+                              widget=forms.Textarea(attrs={"placeholder":"Enter your review here"}))
+
+    def clean_user_book_review(self):
+        review_data = self.cleaned_data["user_book_review"]
+        if len(review_data.split()) < 15:
+            raise ValidationError(_("Review is too short. Please write a more detailed review"))
+        else:
+            return review_data

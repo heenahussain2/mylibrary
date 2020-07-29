@@ -48,10 +48,13 @@ class NYTimesAPI():
         self.bestsellers_coll.insert_one(final_data)
         return final_data
 
-    def get_bestsellers_list(self, current_date_str):
+    def get_bestsellers_list(self, current_date_str,genre):
         bestseller_list = []
-        ## Getting Data only for fiction - can be extended to non fiction as well
-        bestseller_url = "https://api.nytimes.com/svc/books/v3/lists/"+current_date_str+"/hardcover-fiction.json?api-key="
+        ## Getting Data only f/or fiction - can be extended to non fiction as well
+        if genre == "fiction":
+            bestseller_url = "https://api.nytimes.com/svc/books/v3/lists/"+current_date_str+"/hardcover-fiction.json?api-key="
+        elif genre == "non_fiction":
+            bestseller_url = "https://api.nytimes.com/svc/books/v3/lists/"+current_date_str+"/hardcover-nonfiction.json?api-key="
         result = requests.get(bestseller_url+self.api_key)
         if result.status_code == 200:
             result_json = result.json()
@@ -60,21 +63,21 @@ class NYTimesAPI():
             print("Error in getting list")
         return bestseller_list
 
-    def nyt_bestsellers_list(self):
+    def nyt_bestsellers_list(self, genre):
         ## Step1 - Get Today's Date
         current_date = datetime.now()
         current_date_str = current_date.strftime("%Y-%m-%d")
         current_timestamp = int(current_date.replace(tzinfo=timezone.utc).timestamp())
         ### Now get latest data from mongo
-        latest_record = list(self.bestsellers_coll.find({}).sort("next_publish_timestamp",DESCENDING).limit(1))
+        latest_record = list(self.bestsellers_coll.find({"list_name": "Hardcover Fiction" if genre=="fiction" else "Hardcover Nonfiction"}).sort("next_publish_timestamp",DESCENDING).limit(1))
         if latest_record:
             ## Check if current date is greater than next publish date
             if current_timestamp > latest_record[0]["next_publish_timestamp"]:
-                nytimes_list = self.get_bestsellers_list(current_date_str)
+                nytimes_list = self.get_bestsellers_list(current_date_str, genre)
             else:
                 nytimes_list = latest_record[0]
         else:
-            nytimes_list = self.get_bestsellers_list(current_date_str)
+            nytimes_list = self.get_bestsellers_list(current_date_str,genre)
         return nytimes_list
 
     def get_review_data(self, review_json, google_books_data):
@@ -91,7 +94,13 @@ class NYTimesAPI():
                     "summary" : each_review["summary"],
                     "publication_date" : each_review["publication_dt"]
                 })
-        self.review_coll.insert_one(temp_data)
+
+        mongo_review_data = self.review_coll.find_one({"isbn_13":temp_data["isbn_13"]},{"_id":0})
+        if mongo_review_data:
+            mongo_review_data["nyt_review"] = temp_data["nyt_review"]
+            self.review_coll.update({"isbn_13":temp_data["isbn_13"]},mongo_review_data)
+        else:
+            self.review_coll.insert_one(temp_data)
         return temp_data["nyt_review"]
 
     def get_book_review(self, google_books_data):
@@ -99,13 +108,16 @@ class NYTimesAPI():
         isbn_13 = google_books_data["isbn_13"]
         review_url = "https://api.nytimes.com/svc/books/v3/reviews.json?isbn="+isbn_13+"&api-key="
         reviews = self.review_coll.find_one({"isbn_13":isbn_13},{"_id":0})
-        if reviews:
+        if reviews and "nyt_review" in reviews:
             nyt_review = reviews["nyt_review"]
         else:
-            review_data = requests.get(review_url+self.api_key)
-            if review_data.status_code == 200:
-                review_json = review_data.json()
-                nyt_review = self.get_review_data(review_json, google_books_data)
+            try:
+                review_data = requests.get(review_url+self.api_key)
+                if review_data.status_code == 200:
+                    review_json = review_data.json()
+                    nyt_review = self.get_review_data(review_json, google_books_data)
+            except Exception as e:
+                print("Error in Ny times API - get_book_review:\n",e)
         return nyt_review
 
 

@@ -1,62 +1,65 @@
-.blue-background {
-			background-color: #0077AF;
-		}
-.crimson-background {
-	background-color: #d41a3d;
-}
-.green-background {
-	background-color: #00A87A;
-}
-h1 {
-	text-align : center;
-	/*font-size: 32pt;*/
-	font-family: 'Merienda', cursive;
-	color: white;
-	margin-top: 6rem;
-	margin-bottom: 10px;
+body {
+	overflow-y: hidden;
 }
 p {
-    text-align: center;
-    margin-top: 0;
-    font-size: 17px;
-    color: white;
+  text-align: center;
+	margin-top: 3rem;
+  margin-bottom: 0;
+  font-size: 17px;
+  color: white;
 	font-family: 'Rubik', sans-serif;
+}
+h1 {
+    margin: 0;
+}
+div#main-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+		margin-top: -8px;
+		color: white;
+	  margin-left: -8px;
+	  height: 100vh;
+}
+img.open-sign-img {
+    width: 100%;
+    height: 100vh;
 }
 #login-form {
 		display: flex;
-    flex-direction: column;
-    margin-left: 30%;
-    margin-right: 30%;
-    margin-top: 2rem;
-    font-size: 17px;
-    color: white;
-    border-radius: 20px;
+		flex-direction: column;
+		align-items: center;
+    /* border-radius: 20px; */
     font-family: 'Rubik', sans-serif;
 }
-label {
+.form-part {
+    display: grid;
+    grid-template-rows: 0.25fr 1fr;
+}
+/* label {
 	display: flex;
 	text-align: center;
 	padding-bottom: 5px;
-}
+} */
 .form-fields {
-    margin-left: 15%;
-    margin-right: 15%;
-    margin-top: 1rem;
+	width: 50%;
+  /* margin-left: 2rem; */
+  /* margin-right: 2rem; */
+  margin-top: 1rem;
 }
 .form-control {
 	width: 100%;
 	height: auto;
-	padding: 10px;
-		border-radius: 25px;
+	padding: 11px;
+	border-radius: 10px;
 }
 .submit-button {
     width: 100%;
     height: auto;
     font-size: 17px;
-    margin-left: 14px;
     border-radius: 15px;
-    margin-bottom: 2rem;
-    margin-top: 2rem;
+    margin-bottom: 1rem;
+    margin-top: 0;
+		margin-left: 1rem;
     padding: 7px;
     color: white;
 }
@@ -66,20 +69,27 @@ label {
   color: #e30909;
   font-weight: bold;
 }
-a.forgot-pass-link {
+a.forgot-pass-link, a.signup-link {
   text-decoration: none;
-  color: white;
+  color: aqua;
 }
-a.forgot-pass-link:hover {
+a.forgot-pass-link:hover, a.signup-link:hover {
 	text-decoration: underline;
-	color: white;
+	color: aqua;
 }
 p.forgot-password {
-	margin-top: 20px;
-	font-size: 17px;
+    margin-top: 1rem;
+    font-size: 14px;
+    margin-bottom: 0;
+    align-self: flex-end;
+    margin-right: 9rem;
 }
 a.home-page-url {
 	text-decoration: none;
 	color: white;
-
+	font-family: 'Merienda', cursive;
+}
+p.signup-para {
+  margin-top: 0;
+  font-size: 14px;
 }

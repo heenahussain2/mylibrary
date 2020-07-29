@@ -1,35 +1,15 @@
-.crimson-background {
-	background-color: #d41a3d;
-}
-.green-background {
-	background-color: #00A87A;
-}
-h1 {
-	text-align : center;
-	font-size: 30pt;
-	font-family: 'Merienda', cursive;
-	color: white;
-	margin-top: 6rem;
-	margin-bottom: 10px;
+#main-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 4rem;
 }
 p {
-    text-align: center;
-    margin-top: 1rem;
-    font-size: 19px;
-    color: white;
-	font-family: 'Rubik', sans-serif;
+  text-align: center;
+  margin: 10px;
+  font-size: 19px;
+  color: white;
+  font-family: 'Rubik', sans-serif;
 }
-/* #delete-form {
-		display: flex;
-    flex-direction: column;
-    margin-left: 30%;
-    margin-right: 30%;
-    margin-top: 2rem;
-    font-size: 17px;
-    color: white;
-    border-radius: 20px;
-    font-family: 'Rubik', sans-serif;
-} */
 .button-class {
   height: auto;
   font-size: 17px;

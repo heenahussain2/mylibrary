@@ -5,37 +5,46 @@
   <link rel="stylesheet" href="{% static 'css/index.css' %}" type="text/css">
 {% endblock %}
 
-{% block content %}
-    <div id="main-container">
-        <div id="num-books">
-            <p>Books in Collection - {{ num_books_collection }}</p>
-            <p>Books in Wishlist - {{ num_books_wishlist }}</p>
-        </div>
-        <div id="nytimes-books">
-            <h2>New York Times Bestsellers</h2>
-            <p>( {{ from_date }} - {{ to_date }} )</p>
-            {% if nyt_list_data %}
-                <div id="nytbook-grid">
-                    {% for each_book in nyt_list_data %}
-                        <section class="book-list blue-background">
-                            <img class="book-image" src="{{ each_book.book_thumbnail }}" alt="{{ each_book.book_obj.title }}">
-                            <div class="book-content">
-                                <a href="{{ each_book.book_obj.get_bestseller_url }}"><h3 class="book-title">{{ each_book.book_obj.title }}</h3></a>
-                                <div class="book-author">Author - {{ each_book.book_obj.author }}</div>
-                                <div class="book-rank">Rank - {{ each_book.rank }}</div>
-                                <!-- <div class="book-rank">Rank Last Week - {{ each_book.rank_last_week }}</div> -->
-                                <!-- <div class="delete-book"><a href="{{ each_book.bookinstance_obj.get_delete_url }}">Delete Book</a></div> -->
-                            </div>
-                        </section>
-                  {% endfor %}
-                  <section class="view-collection">
-                      <p><a class="view-link" href="#">View Complete List</a></p>
-                  </section>
-                </div>
-            {% else %}
-                <p class="no-books">Sorry! Data Not available</p>
-            {% endif %}
-        </div>
-     </div> <!-- main container ends here -->
+{% block content_inside %}
+  <div id="num-books">
+      <p>Books in Collection - {{ num_books_collection }}</p>
+      <p>Books in Wishlist - {{ num_books_wishlist }}</p>
+  </div>
+
+  {% if num_books_collection == 0 and num_books_wishlist == 0 %}
+      <div id="website-guide">
+          <h2>Welcome to MyLibrary</h2>
+          <p>Get Started:</p>
+          <ul>
+            <li>To add a book you want to share click on <i>Add Book to Collection</i></li>
+            <li>You can view the books added by clicking on <i>My Collection</i> tab</li>
+            <li>If you want to buy a book then click on <i>Add Book to Wishlist</i></li>
+            <li>You can view the books added to wishlist by clicking on <i>Wishlist</i> tab</li>
+          </ul>
+      </div>
+  {% endif %}
+  {% for name, recently_added in recently_added_data %}
+      <h2>Recently Added Books to {{ name }}</h2>
+      <p class="date-range">( {{ from_date }} - {{ to_date }} )</p>
+      {% if recently_added %}
+          <div class="recently-added">
+            {% for each_book in recently_added %}
+                <section class="book-list blue-background">
+                    <img class="book-image" src="{{ each_book.book_thumbnail }}" alt="{{ each_book.book_inst_obj.book.title }}">
+                    <div class="book-content">
+                        {% if name == "Collection" %}
+                            <a class="book-link" href="{% url 'recently-added-details' pk=each_book.book_inst_obj.id %}"><h3 class="book-title">{{ each_book.book_inst_obj.book.title }}</h3></a>
+                        {% else %}
+                            <a class="book-link" href="{% url 'wishlist-detail' pk=each_book.book_inst_obj.id %}"><h3 class="book-title">{{ each_book.book_inst_obj.book.title }}</h3></a>
+                        {% endif %}
+                        <div class="book-author">Author - {{ each_book.book_inst_obj.book.author }}</div>
+                        <div class="book-owner">Added by - {{ each_book.book_inst_obj.book_owner.username }}</div>
+                    </div>
+                </section>
+          {% endfor %}
+          </div>
+    {% else %}
+        <p class="no-books-added">No books were added recently</p>
+    {% endif %}
+  {% endfor %}
 {% endblock %}
-<!-- {{ each_book.book_obj.get_absolute_url }} -->

@@ -5,8 +5,17 @@
   <link rel="stylesheet" href="{% static 'css/detail_view.css' %}" type="text/css">
 {% endblock %}
 
-{% block content %}
-  <div id="main-container">
+{% block side_navbar %}
+  {% if request.user ==  bookinstance_obj.book_owner %}
+      <li class="side-active-link"><a class="sidenav-link" href="{% url 'books' %}">Back</a></li>
+  {% else %}
+      <li class="side-active-link"><a class="sidenav-link" href="{% url 'index' %}">Back</a></li>
+  {% endif %}
+{% endblock %}
+
+{% block content_inside %}
+  {% url 'book-detail' id=bookinstance_obj.id  as user_detail_url %}
+  <div id="main-data-container">
     <!-- <div class="delete-book"><a href="{{ bookinstance.get_delete_url }}">Delete Book</a></div> -->
     <h1>{{ bookinstance_obj.book.title }}</h1>
     <!-- <p class="goto-collection"><a class="collection-link" href="{% url 'books' %}">Go to Collection</a></p> -->
@@ -53,15 +62,25 @@
 		</div>
     <h3>Book Review</h3>
     <!-- this part is static and only for place holder purpose -->
-			<form id="review-form" >
-				<div class="form-fields">
-					<p class="review-text">You haven't reviewed the book yet.</p>
-					<p class="review-text">Enter your review below.</p>
-					<textarea id="review" name="review-field" placeholder="Enter your review here...."></textarea>
-				</div>
+    {% if request.user ==  bookinstance_obj.book_owner and bookinstance_obj.user_book_review == None %}
+			<form id="review-form" action="" method="POST">
+        {% csrf_token %}
+        <div class="form-fields">
+            <p class="review-text">You haven't reviewed the book yet.</p>
+            <p class="review-text">Enter your review below.</p>
+            {{ form.user_book_review.errors }}
+            {{ form.user_book_review }}
+        </div>
 				<div class="form-fields">
 					<button id="submit" type="submit" class="submit-button blue-background">Submit Review</button>
 				</div>
 		</form>
+  {% else %}
+      {% if bookinstance_obj.user_book_review == None or bookinstance_obj.user_book_review == "" %}
+          <p class="review-text">This book hasn't been reviewed by the user</p>
+      {% else %}
+          <p class="review-text">{{ bookinstance_obj.user_book_review }}</p>
+      {% endif %}
+  {% endif %}
 </div>
 {% endblock %}

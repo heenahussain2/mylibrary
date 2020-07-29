@@ -5,8 +5,15 @@
   <link rel="stylesheet" href="{% static 'css/detail_view.css' %}" type="text/css">
 {% endblock %}
 
-{% block content %}
-  <div id="main-container">
+{% block side_navbar %}
+  {% if fiction_flag %}
+    <li class="side-active-link"><a class="sidenav-link" href="{% url 'bestseller-list' genre='fiction' %}">Back</a></li>
+  {% else %}
+    <li class="side-active-link"><a class="sidenav-link" href="{% url 'bestseller-list' genre='non_fiction' %}">Back</a></li>
+  {% endif %}
+{% endblock %}
+{% block content_inside %}
+  <div id="main-data-container">
     <h1>{{ book_obj.title }}</h1>
     <div class="book-author">Author - {{ book_obj.author }}</div>
     <div id="book-description">
@@ -52,8 +59,8 @@
     {% if nytimes_review %}
         {% for each_review in nytimes_review %}
           <div id="review-box">
-            <a href="{{ each_review.review_url }}">{{ each_review.summary }}</a>
-            <p>by - {{ each_review.review_by }}<p>
+            <p class="review-snippet">{{ each_review.summary }}... <a class="gbooks-link" href="{{ each_review.review_url }}" target="_blank">Read Full Review</a></p>
+            <p>by - {{ each_review.review_by }}</p>
             <p>Publication Date - {{ each_review.publication_date }}</p>
           </div>
         {% endfor %}
@@ -69,5 +76,5 @@
         <p class="not-found" >No Links Found</p>
     {% endif %}
   </div>
-  
+
 {% endblock %}

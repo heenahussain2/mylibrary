@@ -1,0 +1,39 @@
+{% extends 'base_generic.html' %}
+
+{% block cssfiles %}
+{% load static %}
+  <link rel="stylesheet" href="{% static 'css/nyt_bestseller_list.css' %}" type="text/css">
+{% endblock %}
+
+{% block content_inside %}
+<div id="nytimes-books">
+    <!-- <h2>New York Times Bestsellers</h2> -->
+    <ul>
+      <li class="{% if fiction_flag %}genre-active-link{% endif %}"><a class="genre-link" href="{% url 'bestseller-list' genre='fiction' %}">Fiction</a></li>
+      <li class="{% if not fiction_flag %}genre-active-link{% endif %}"><a class="genre-link" href="{% url 'bestseller-list' genre='non_fiction' %}">Non Fiction</a></li>
+    </ul>
+    {% if nyt_list_data %}
+      <p>( {{ from_date }} - {{ to_date }} )</p>
+          <div id="nytbook-grid">
+              {% for each_book in nyt_list_data %}
+                  <section class="book-list blue-background">
+                      <img class="book-image" src="{{ each_book.book_thumbnail }}" alt="{{ each_book.book_obj.title }}">
+                      <div class="book-content">
+                          {% if fiction_flag %}
+                            <a class="book-link" href="{% url 'bestseller-detail' genre='fiction' pk=each_book.book_obj.id %}"><h3 class="book-title">{{ each_book.book_obj.title }}</h3></a>
+                          {% else %}
+                            <a class="book-link" href="{% url 'bestseller-detail' genre='non_fiction' pk=each_book.book_obj.id %}"><h3 class="book-title">{{ each_book.book_obj.title }}</h3></a>
+                          {% endif %}
+                          <div class="book-author">Author - {{ each_book.book_obj.author }}</div>
+                          <div class="book-rank">Rank - {{ each_book.rank }}</div>
+                          <!-- <div class="book-rank">Rank Last Week - {{ each_book.rank_last_week }}</div> -->
+                          <!-- <div class="delete-book"><a href="{{ each_book.bookinstance_obj.get_delete_url }}">Delete Book</a></div> -->
+                      </div>
+                  </section>
+            {% endfor %}
+          </div>
+      {% else %}
+          <p class="no-books">Sorry! Data Not available</p>
+      {% endif %}
+  </div>
+{% endblock %}

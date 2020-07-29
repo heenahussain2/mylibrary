@@ -1,0 +1,76 @@
+.genre-active-link {
+    border-bottom: 4px solid #d41a3d;
+}
+#nytimes-books {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2rem;
+  color: white;
+  font-family: 'Rubik',sans-serif;
+}
+#nytimes-books ul {
+  list-style: none;
+  display: flex;
+}
+#nytimes-books li {
+  margin: 1rem;
+  padding: 10px;
+}
+.genre-link {
+  color: aqua;
+  text-decoration: none;
+  font-size: 20px;
+}
+#nytimes-books p {
+    margin: 5px 0;
+}
+#nytbook-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  grid-gap: 1.5rem;
+  margin-top: 1rem;
+  margin-right: 2rem;
+}
+.book-list {
+	border-radius: 20px;
+  display: grid;
+  grid-template-columns: 0.5fr 1fr;
+  grid-template-rows: 1fr;
+  grid-column-gap: 10px;
+}
+.book-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.book-link {
+  text-decoration: none;
+}
+.book-link:hover {
+  text-decoration: underline;
+  color: white;
+}
+.book-image{
+  border-radius: 20px;
+  height: 200px;
+}
+.book-title {
+    font-size: 16pt;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    color: rgba(255, 255, 255, 0.92);
+    font-family: 'Noto Sans TC', sans-serif;
+    /* text-align: center; */
+}
+.book-author {
+    padding-bottom: 15px;
+    font-size: 13pt;
+    color: rgba(255, 255, 255, 0.92);
+    font-family: 'Rubik', sans-serif;
+    text-align: left;
+    /* text-align: center; */
+}
+.book-rank {
+    font-size: 14px;
+    margin-bottom: 5px;
+}

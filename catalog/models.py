@@ -65,12 +65,13 @@ class Book(models.Model):
 class BookInstance(models.Model):
     """Model representing a specific copy of a book (i.e. that can be borrowed from the library)."""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique ID for this particular book across whole library')
-    book = models.ForeignKey('Book', on_delete=models.SET_NULL, null=True,blank=True)
+    book = models.ForeignKey('Book', on_delete=models.CASCADE, null=True,blank=True)
     # imprint = models.CharField(max_length=200)
     summary = models.TextField(max_length=1000, help_text='Enter a brief description of the book',null=True,blank=True)
     # due_back = models.DateField(null=True, blank=True)
     added_on = models.DateField(default=timezone.now, null=True, blank=True)
     book_owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    user_book_review = models.TextField(max_length=1000, help_text='Enter your review here',null=True, blank=True)
     # LOAN_STATUS = (
     #     ('m', 'Maintenance'),
     #     ('o', 'On loan'),

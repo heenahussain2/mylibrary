@@ -20,7 +20,7 @@ class GoogleBooksAPIData():
             book_data = self.books_coll.find_one({"isbn_13":isbn},{"_id":0})
         return book_data
 
-    def save_mongo_data(self, book_data, nytimes_fiction):
+    def save_mongo_data(self, book_data, nytimes_data, genre):
         volume_info = book_data["volumeInfo"]
         data_to_save = {
             "book_title" : volume_info["title"].lower(),
@@ -35,8 +35,8 @@ class GoogleBooksAPIData():
             "preview_link" :  volume_info.get("previewLink",""),
             "buy_link" :  volume_info.get("infoLink","")
         }
-        if not volume_info.get("categories",[]) and nytimes_fiction:
-            data_to_save["genre"] = ["Fiction"]
+        if not volume_info.get("categories",[]) and nytimes_data:
+            data_to_save["genre"] = [" ".join(genre.split("_")).title()]
         else:
             data_to_save["genre"] = volume_info.get("categories",[])
         ## for unique_key
@@ -55,11 +55,11 @@ class GoogleBooksAPIData():
         book_data = {}
         try:
             if book_title and author and not isbn:
-                book_url = "https://www.googleapis.com/books/v1/volumes?q=intitle:"
-                result = requests.get(book_url+book_title+"&key="+self.google_api_key)
+                book_url = "https://www.googleapis.com/books/v1/volumes?q=intitle:"+book_title+" "+author+"&key="
+                result = requests.get(book_url+self.google_api_key)
             elif isbn:
-                book_url = "https://www.googleapis.com/books/v1/volumes?q=isbn:"
-                result = requests.get(book_url+isbn+"&key="+self.google_api_key)
+                book_url = "https://www.googleapis.com/books/v1/volumes?q=isbn:"+isbn+"&key="
+                result = requests.get(book_url+self.google_api_key)
             if result.status_code == 200:
                 result_json = result.json()
                 if result_json and result_json["totalItems"] > 0:
@@ -68,7 +68,7 @@ class GoogleBooksAPIData():
             print("Error in getting book from api")
         return book_data
 
-    def get_book_data(self, book_title="", author="",isbn="", nytimes_fiction=False):
+    def get_book_data(self, book_title="", author="",isbn="", nytimes_data=False,genre=""):
         saved_book_data = {}
         book_data = {}
         if book_title and author and not isbn:
@@ -80,14 +80,14 @@ class GoogleBooksAPIData():
             if not saved_book_data:
                 book_data = self.get_google_books_data(book_title=book_title, author=author)
                 if book_data:
-                    saved_book_data = self.save_mongo_data(book_data)
+                    saved_book_data = self.save_mongo_data(book_data, nytimes_data,genre)
 
         elif isbn and not book_title and not author:
             saved_book_data = self.get_mongo_data(isbn=isbn)
             if not saved_book_data:
                 book_data = self.get_google_books_data(isbn=isbn)
                 if book_data:
-                    saved_book_data = self.save_mongo_data(book_data, nytimes_fiction)
+                    saved_book_data = self.save_mongo_data(book_data, nytimes_data,genre)
         return saved_book_data
 
 # if __name__ == '__main__':

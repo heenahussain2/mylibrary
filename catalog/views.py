@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from catalog.forms import AddBookForm, SignUpForm
+from catalog.forms import AddBookForm, SignUpForm, BookReviewForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import Group, Permission
 from .crawlers.google_books_api import GoogleBooksAPIData
@@ -14,6 +14,7 @@ from .crawlers.nytimes_api import NYTimesAPI
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from collections import OrderedDict
 import base64
+import datetime
 # Create your views here.
 # from catalog.models import Book, Author, BookInstance, Genre
 
@@ -36,6 +37,8 @@ class LandingPageView(View):
             user = authenticate(username=username, password=password)
             login(request, user)
             return redirect('index')
+        return render(request, 'landing_page.html', {'form': form})
+
 
     def add_new_user(self, form):
         user_obj = form.save()
@@ -71,84 +74,146 @@ class HomePageView(LoginRequiredMixin, View):
     redirect_field_name = "login"
     def get(self, request):
         context = {}
-        final_top_list = []
+        from_date = datetime.datetime.now() + datetime.timedelta(days=-30)
+        to_date = datetime.date.today()
+        current_user = request.user
         bookinst_obj = BookInstance.objects.filter(book_owner=request.user)
         wishlist_obj = WishlistBookInstance.objects.filter(book_owner=request.user)
-        ## Get NYT Bestsellers List
-        nyt_list_obj = NYTimesAPI().nyt_bestsellers_list()
-        nyt_book_list = list(nyt_list_obj["book_list"].values())
-        nyt_top10 = nyt_book_list[:7] if len(nyt_book_list) > 7 else nyt_book_list
-        ### get top 5 book data from google books api and create a book object
-        for top_book in nyt_top10:
-             temp_data = OrderedDict()
-             google_books_data = GoogleBooksAPIData().get_book_data(isbn=top_book["isbn_13"], nytimes_fiction=True)
-             ## Create Book Object for detail view
-             if google_books_data:
-                 google_books_data["language"] = Language.objects.get(name="English")
-                 google_books_data["genre_obj"] = []
-                 for each_genre in google_books_data["genre"]:
-                     try:
-                         genre_obj = Genre.objects.get(name= each_genre)
-                     except Exception:
-                         genre_obj = Genre.objects.create(name= each_genre)
-                         genre_obj.save()
-                     google_books_data["genre_obj"].append(genre_obj)
-
-                 book_obj = AddBookToCollection().create_book_object(google_books_data)
-                 temp_data["book_obj"] = book_obj
-                 temp_data["book_thumbnail"] = google_books_data["book_image_links"]["thumbnail"]
-                 temp_data["rank"] = top_book["book_rank"]
-                 temp_data["rank_last_week"] = top_book["rank_last_week"]
-                 final_top_list.append(temp_data)
         context["num_books_collection"] = len(bookinst_obj)
         context["num_books_wishlist"] =  len(wishlist_obj)
-        context["from_date"] =nyt_list_obj["published_date"].strftime("%d/%m/%Y")
-        context["to_date"] = nyt_list_obj["next_published_date"].strftime("%d/%m/%Y")
-        context["nyt_list_data"] = final_top_list[:5] if len(final_top_list) >5 else final_top_list
+        context["from_date"] = from_date.date().strftime("%d/%m/%Y")
+        context["to_date"] = to_date.strftime("%d/%m/%Y")
+        recently_added_to_collection = self.recently_added("collection", current_user, from_date, to_date)
+        recently_added_to_wishlist = self.recently_added("wishlist", current_user, from_date, to_date)
+        ## For Recently added Books
+        context["recently_added_data"] = [("Collection",recently_added_to_collection),("Wishlist",recently_added_to_wishlist)]
+
         return render(request, 'index.html', context=context)
+
+    def recently_added(self, added_to, current_user, from_date, to_date):
+        books_to_return = []
+        # from_date = datetime.date(2020,6,27)
+        ### NOTE: For now taking 30 days due to lack of data later will change to 3-4 days
+
+        try:
+            if added_to == "collection":
+                recent_books = BookInstance.objects.filter(added_on__gte=from_date.date(), added_on__lte=to_date).exclude(book_owner=current_user).order_by('-added_on')
+            elif added_to == "wishlist":
+                recent_books = WishlistBookInstance.objects.filter(added_on__gte=from_date.date(), added_on__lte=to_date).exclude(book_owner=current_user).order_by('-added_on')
+        except Exception:
+            recent_books = []
+        recent_books = recent_books[:6] if len(recent_books) > 6 else recent_books
+        if recent_books:
+            for book_inst in recent_books:
+                temp_data = {}
+                try:
+                    google_books_data = GoogleBooksAPIData().get_book_data(isbn=book_inst.book.isbn)
+                except Exception:
+                    google_books_data = {}
+                if google_books_data:
+                    temp_data["book_inst_obj"] = book_inst
+                    temp_data["book_thumbnail"] = google_books_data["book_image_links"]["thumbnail"]
+                    books_to_return.append(temp_data)
+        return books_to_return
+
+
+class NytBestsellerView(LoginRequiredMixin, View):
+    login_url = "/accounts/login/"
+    redirect_field_name = "login"
+    def get(self, request, genre):
+        context = {}
+        final_top_list = []
+        try:
+            ## Get NYT Bestsellers List
+            nyt_list_obj = NYTimesAPI().nyt_bestsellers_list(genre)
+            nyt_book_list = list(nyt_list_obj["book_list"].values())
+            ### get top 5 book data from google books api and create a book object
+            for top_book in nyt_book_list:
+                 temp_data = OrderedDict()
+                 google_books_data = GoogleBooksAPIData().get_book_data(isbn=top_book["isbn_13"], nytimes_data=True,genre=genre)
+                 ## Create Book Object for detail view
+                 if google_books_data:
+                     google_books_data["language"] = Language.objects.get(name="English")
+                     google_books_data["genre_obj"] = []
+                     for each_genre in google_books_data["genre"]:
+                         try:
+                             genre_obj = Genre.objects.get(name= each_genre)
+                         except Exception:
+                             genre_obj = Genre.objects.create(name= each_genre)
+                             genre_obj.save()
+                         google_books_data["genre_obj"].append(genre_obj)
+
+                     book_obj = AddBookToCollection().create_book_object(google_books_data)
+                     temp_data["book_obj"] = book_obj
+                     temp_data["book_thumbnail"] = google_books_data["book_image_links"]["thumbnail"]
+                     temp_data["rank"] = top_book["book_rank"]
+                     temp_data["rank_last_week"] = top_book["rank_last_week"]
+                     final_top_list.append(temp_data)
+            context["from_date"] =nyt_list_obj["published_date"].strftime("%d/%m/%Y")
+            context["to_date"] = nyt_list_obj["next_published_date"].strftime("%d/%m/%Y")
+            context["nyt_list_data"] = final_top_list
+            if genre == 'fiction':
+                context["fiction_flag"] = True
+            elif genre == 'non_fiction':
+                context["fiction_flag"] = False
+        except Exception:
+             context["nyt_list_data"] = []
+        return render(request, "catalog/nyt_bestseller_list.html",context)
+
 
 class BestsellerDetailView(LoginRequiredMixin, View):
     login_url = "/accounts/login/"
     redirect_field_name = "login"
-    def get(self, request, pk):
+    def get(self, request, genre, pk):
         context = {}
         book_obj = get_object_or_404(Book, pk=pk)
         if book_obj:
             google_books_data = GoogleBooksAPIData().get_book_data(isbn=book_obj.isbn)
-            ny_times_data = NYTimesAPI().nyt_bestsellers_list()
+            ny_times_data = NYTimesAPI().nyt_bestsellers_list(genre)
             string_to_encode = google_books_data["isbn_13"]
             encoded_str = str(base64.b64encode(string_to_encode.encode("utf-8")),"utf-8")
             context["book_obj"] = book_obj
             context["google_books_data"] = google_books_data
             context["nytimes_data"] = ny_times_data["book_list"][encoded_str]
             context["nytimes_review"] = NYTimesAPI().get_book_review(google_books_data)
+            if genre == 'fiction':
+                context["fiction_flag"] = True
+            elif genre == 'non_fiction':
+                context["fiction_flag"] = False
         return render(request, 'catalog/bestseller_details.html', context=context)
-
 
 class BookListView(LoginRequiredMixin, View):
     login_url = "/accounts/login/"
     redirect_field_name = "login"
+
+    def __init__(self, **kwargs):
+        super(BookListView, self).__init__()
+        self.model_name = BookInstance
+        self.template_name = 'catalog/book_list.html'
+
+    def get_queryset(self, current_user):
+        return self.model_name.objects.filter(book_owner= current_user).order_by('added_on')
+
     def get(self, request):
+        url_name = 'books'
         context = {}
         book_data_list = []
-        book_obj = BookInstance.objects.filter(book_owner= request.user).order_by('added_on')
-        ### For Pagination - each page will contain 4 objects
-        page = request.GET.get('page', 1)
+        try:
+            book_obj =  self.get_queryset(request.user)
+        except Exception:
+            return HttpResponseRedirect(reverse(url_name))
         if book_obj:
             for each_book in book_obj:
-                book_data = self.prepare_books_data(each_book)
-                if book_data:
-                    book_data["bookinstance_obj"] = each_book
-                    book_data_list.append(book_data)
-        paginator = Paginator(book_data_list,6)
-        try:
-            paginated_list = paginator.page(page)
-        except PageNotAnInteger:
-            paginated_list = paginator.page(1)
-        except EmptyPage:
-            paginated_list = paginator.page(paginator.num_pages)
-
-        return render(request,'catalog/book_list.html',{"book_data_list": paginated_list})
+                if each_book.book != None:
+                    book_data = self.prepare_books_data(each_book)
+                    if book_data:
+                        clipped_data = BookDetailView().clip_description(book_data, 20)
+                        clipped_data["book_data"]["bookinstance_obj"] = each_book
+                        clipped_data["book_data"]["clipped_desc"] = clipped_data["clipped_desc"]
+                        book_data_list.append(clipped_data["book_data"])
+        ### For Pagination - each page will contain 4 objects
+        paginated_list = self.paginate_data(request, book_data_list)
+        return render(request, self.template_name, {"book_data_list": paginated_list})
 
     def prepare_books_data(self, each_book_obj):
         temp_book_data = {}
@@ -157,26 +222,58 @@ class BookListView(LoginRequiredMixin, View):
         temp_book_data = GoogleBooksAPIData().get_book_data(book_title=book_title, author=author)
         return temp_book_data
 
+    def paginate_data(self, request, book_data_list):
+        page = request.GET.get('page', 1)
+
+        paginator = Paginator(book_data_list,6)
+        try:
+            paginated_list = paginator.page(page)
+        except PageNotAnInteger:
+            paginated_list = paginator.page(1)
+        except EmptyPage:
+            paginated_list = paginator.page(paginator.num_pages)
+        return paginated_list
+
 class BookDetailView(LoginRequiredMixin, View):
     login_url = "/accounts/login/"
     redirect_field_name = "login"
     def get(self, request, pk):
         context = {}
         book_instance = get_object_or_404(BookInstance, pk=pk)
-        if book_instance:
-            book_data = BookListView().prepare_books_data(book_instance)
-            if book_data:
-                context["bookinstance_obj"] = book_instance
-                context.update(self.clip_description(book_data))
+        book_data = BookListView().prepare_books_data(book_instance)
+        if book_data:
+            context["bookinstance_obj"] = book_instance
+            context.update(self.clip_description(book_data, 50))
+            if book_instance.user_book_review == None:
+                form = BookReviewForm(initial={})
+                context["form"] = form
         return render(request,'catalog/book_detail.html',context)
 
-    def clip_description(self, book_data):
+    def post(self, request, pk):
+        ### This part is to save user review of the book
+        context = {}
+        book_instance = get_object_or_404(BookInstance, pk=pk)
+        form = BookReviewForm(request.POST)
+        if form.is_valid():
+            book_instance.user_book_review = form.cleaned_data["user_book_review"]
+            book_instance.save()
+            return HttpResponseRedirect(reverse("book-detail",args=[str(book_instance.id)]))
+
+        book_data = BookListView().prepare_books_data(book_instance)
+        if book_data:
+            context["bookinstance_obj"] = book_instance
+            context.update(self.clip_description(book_data, 50))
+        context["form"] = form
+        return render(request, 'catalog/book_detail.html', context)
+
+
+    def clip_description(self, book_data, words_to_clip):
         temp_dict = {}
         temp_dict["clipped_desc"] = False
         desc = book_data["description"].split()
-        if len(desc) > 50:
+        if len(desc) > words_to_clip:
             temp_dict["clipped_desc"] = True
-            book_data["clipped_description"] = " ".join(desc[:50])
+            book_data["clipped_description"] = " ".join(desc[:words_to_clip])
         temp_dict["book_data"] = book_data
         return temp_dict
 
@@ -237,13 +334,21 @@ class AddBookToCollection(LoginRequiredMixin, View):
             author_obj.save()
         return author_obj
 
+class DeleteBookView(LoginRequiredMixin, View):
+    login_url = "/accounts/login/"
+    redirect_field_name = "login"
+    def __init__(self):
+        super(DeleteBookView, self).__init__()
+        self.model_name = BookInstance
+        self.reverse_page = 'books'
+        self.template_name = 'catalog/delete_book_confirm.html'
 
-def delete_book(request, pk):
-    book_instance = get_object_or_404(BookInstance, pk=pk)
-    context = {'book_instance':book_instance}
-    ## if request method is post then delete the book instance
-    if request.method == 'POST':
+    def get(self, request, pk):
+        book_instance = get_object_or_404(self.model_name, pk=pk)
+        context = {'book_instance':book_instance}
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        book_instance = get_object_or_404(self.model_name, pk=pk)
         book_instance.delete()
-        return HttpResponseRedirect(reverse('books'))
-
-    return render(request, 'catalog/delete_book_confirm.html',context)
+        return HttpResponseRedirect(reverse(self.reverse_page))

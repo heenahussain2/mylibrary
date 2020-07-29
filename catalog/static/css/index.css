@@ -1,37 +1,61 @@
-#main-container {
-    margin-left: 20%;
-    margin-top: 5rem;
-}
 #num-books {
     display: grid;
     grid-template-columns: 1fr 1fr;
     color: white;
     font-family: 'Rubik',sans-serif;
     font-size: 20px;
-    margin: 2rem;
+    /* margin: 2rem; */
+    margin: 2rem 1rem 1rem 2rem;
 		justify-items: center;
+    border-bottom: 2px solid;
     /* grid-column-gap: 4rem; */
 }
-#nytimes-books {
-  display: flex;
-  flex-direction: column;
+#website-guide {
+    /* margin-left: 2rem; */
+    display: flex;
+    flex-direction: column;
+    color: aqua;
+    font-family: 'Rubik',sans-serif;
+}
+#website-guide p {
+    margin: 10px 4rem;
+    font-size: 20px;
+    font-weight: 500;
+}
+#website-guide h2 {
+    align-self: center;
+    font-size: 1.7rem;
+    margin-bottom: 0;
+}
+#website-guide ul {
+    list-style: disc;
+    margin-left: 2rem;
+    margin-top: 0;
+}
+i {
+  color: blanchedalmond;
+}
+#website-guide li {
+    margin: 10px;
+    font-size: 17px;
+}
+h2 {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 22px;
+  font-family: 'Rubik',sans-serif;
+  margin: 3rem 2rem 0 2rem;
+}
+p.date-range {
+  color: #00f9f9;
   margin-left: 2rem;
-  color: white;
+  font-size: 16px;
   font-family: 'Rubik',sans-serif;
 }
-#nytimes-books h2 {
-    /* margin-left: 2rem; */
-    margin-bottom: 0rem;
-}
-#nytimes-books p {
-    margin: 5px 0;
-}
-#nytbook-grid {
+.recently-added {
   display: grid;
   grid-template-columns: repeat(3,1fr);
   grid-gap: 1.5rem;
-  margin-top: 1rem;
-  margin-right: 2rem;
+  margin: 1rem 2rem;
 }
 .book-list {
 	border-radius: 20px;
@@ -45,10 +69,10 @@
   flex-direction: column;
   align-items: flex-start;
 }
-.book-content a {
+.book-link {
   text-decoration: none;
 }
-.book-content a:hover {
+.book-link:hover {
   text-decoration: underline;
   color: white;
 }
@@ -57,7 +81,7 @@
   height: 200px;
 }
 .book-title {
-    font-size: 16pt;
+    font-size: 18px;
     margin-bottom: 10px;
     margin-top: 10px;
     color: rgba(255, 255, 255, 0.92);
@@ -66,26 +90,21 @@
 }
 .book-author {
     padding-bottom: 15px;
-    font-size: 13pt;
+    font-size: 16px;
     color: rgba(255, 255, 255, 0.92);
     font-family: 'Rubik', sans-serif;
     text-align: left;
     /* text-align: center; */
 }
-.view-collection {
-  justify-self: center;
-  margin-top: 4rem;
+.book-owner {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: 'Rubik', sans-serif;
 }
-a.view-link {
-    color: white;
-    font-size: large;
-    text-decoration: none;
-}
-a.view-link:hover {
-	text-decoration: underline;
-	color: aqua;
-}
-.book-rank {
-    font-size: 14px;
-    margin-bottom: 5px;
+p.no-books-added {
+  margin: 1rem 2rem;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 19px;
+  font-family: 'Rubik',sans-serif;
 }

@@ -1,30 +1,50 @@
+body {
+  overflow-y: hidden;
+}
 #main-container {
-    margin-top: 5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-right: -8px;
+}
+.text-div {
+  margin: 5rem 3rem;
 }
 p {
-    text-align: center;
-    margin-top: 2rem;
-    margin-bottom: 0;
-    font-size: 18px;
-    color: white;
-	  font-family: 'Rubik', sans-serif;
+  text-align: justify;
+  margin-top: 1rem;
+  line-height: 1.5;
+  margin-bottom: 0;
+  font-size: 17px;
+  color: #FFEB3B;
+  font-family: 'Rubik', sans-serif;
+}
+q {
+    color: #58ecba;
+}
+#form-div {
+  background-image: url("https://images.unsplash.com/photo-1509634928578-951757981629?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80");
+  height: 100vh;
+  width:100%;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 #add-book-form {
 		display: flex;
     flex-direction: column;
-    margin-left: 30%;
-    margin-right: 30%;
-    margin-top: 1rem;
+    margin: 3rem;
     font-size: 17px;
     color: white;
     border-radius: 15px;
     font-family: 'Rubik', sans-serif;
+    background-color: rgba(71, 131, 144, 0.7);
+    backdrop-filter: saturate(180%) blur(4px);
 }
 ul.errorlist.nonfield {
     list-style: none;
     text-align: center;
-    color: #e30909;
+    color: #b1c734;
     font-weight: bold;
+    margin-top: 10px;
     margin-bottom: 0;
 }
 ul.errorlist {

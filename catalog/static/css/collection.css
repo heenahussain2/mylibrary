@@ -1,9 +1,9 @@
-#main-container {
+#book-list-container {
   display: grid;
   grid-auto-rows: 200px;
   grid-template-columns: repeat(3,1fr);
   justify-content: center;
-  margin: 5.5rem 3rem 1.5rem 16rem;
+  margin: 2.5rem 2rem 1.5rem 2rem;
   grid-row-gap: 30px;
   grid-column-gap: 2rem;
 }
@@ -58,12 +58,20 @@
   color: #d20e0e; /*a variation of red color */
   font-weight: bold;
 }
-p.no-books {
-  margin-left: 35%;
-  margin-top: 10rem;
-  font-size: 24pt;
+.no-books {
+  display: flex;
+  flex-direction: column;
+  margin-top: 6rem;
+}
+.no-books p {
+  margin: 15px;
+  font-size: 19px;
+  text-align: center;
   color: white;
   font-family: 'Noto Sans TC', sans-serif;
+}
+i {
+    color: coral;
 }
 /* for pagination */
 

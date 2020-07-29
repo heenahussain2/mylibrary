@@ -6,31 +6,68 @@
 {% endblock %}
 
 {% block content %}
-<div id="main-content">
+<div id="main-container">
   <div id="page-content">
     <h1>My Library</h1>
-  </div>
-  <form action = "" method="post" id="signup-form" class="green-background">
-    {% csrf_token %}
-    <h3>Sign Up Here!</h3>
-    <p class="sub-heading">Become a member</p>
-    {% for field in form %}
-        <div class="form-fields">
-          {% for error in field.errors %}
-            <p class="error-field">{{ error }}</p>
-          {% endfor %}
-          {{ field.label_tag }}
-          {{ field }}
-          {% if field.help_text %}
-            {% for h_text in field.help_text %}
-                <p class="help-text">{{ h_text }}</p>
-            {% endfor%}
-          {% endif %}
-        </div>
-    {% endfor %}
-    <div class="form-fields">
-      <input type="submit" value="Sign Up" class="submit-button crimson-background">
+    <div class="description-text">
+        <h3>Make your Bookshelf Virtual</h3>
+        <p>With <i>MyLibrary</i> you can create a virtual bookshelf and share it with
+        your friends and family.</p>
+        <p>Creating a bookshelf will help you sort through your books and
+        also help you and others find their next reads.</p>
+        <p>We also provide latest <i>New York Times Bestseller</i> lists - another way for you to select your next read.</p>
+        <p>So join us by filling the <i>sign up</i> form and enjoy the journey with fellow Book Lovers..</p>
     </div>
-  </form>
+  </div>
+  <div id="form-div">
+    <section id="navbar-outside" class="navbar">
+        <ul>
+          <!-- <li><a href="{% url 'login'%}" class="nav-link">Login</a></li> -->
+          <li><a href="{% url 'login'%}" class="nav-link">Login</a></li>
+        </ul>
+    </section>
+      <form action = "" method="post" id="signup-form">
+        {% csrf_token %}
+        <h3>Sign Up Here!</h3>
+        <p class="sub-heading">Become a member</p>
+          <div class="form-fields">
+              {{ form.username.errors }}
+              <label for="id_username">Username</label>
+              {{ form.username }}
+          </div>
+          <div class="form-fields name-field">
+            <label for="id_first_name">Name</label>
+            {{ form.first_name.errors }}
+            {{ form.first_name }}
+            {{ form.last_name.errors }}
+            {{ form.last_name }}
+        </div>
+          <div class="form-fields">
+              {{ form.email.errors }}
+              <label for="id_email">Email</label>
+              {{ form.email }}
+          </div>
+          <div class="form-fields">
+              {{ form.password1.errors }}
+              <label for="id_password1">Password</label>
+              {{ form.password1 }}
+              {% for h_text in form.password1.help_text %}
+                  <p class="help-text">{{ h_text }}</p>
+              {% endfor%}
+          </div>
+          <div class="form-fields">
+              {{ form.password2.errors }}
+              <label for="id_password2">Password Confirmation</label>
+              {{ form.password2 }}
+              {% for h_text in form.password2.help_text %}
+                  <p class="help-text">{{ h_text }}</p>
+              {% endfor%}
+          </div>
+        <div class="form-fields">
+          <input type="submit" value="Sign Up" class="submit-button crimson-background">
+        </div>
+        <p class="login-para">Already a member? <a class="login-link" href="{% url 'login' %}">click here</a> to login</p>
+    </form>
+  </div>
 </div>
 {% endblock %}

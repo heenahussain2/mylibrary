@@ -35,6 +35,6 @@ class BookInstanceAdmin(admin.ModelAdmin):
             'fields': ('id','book','summary')
         }),
         ('Owner', {
-            'fields':('book_owner', 'added_on')
+            'fields':('book_owner', 'added_on','user_book_review')
         }),
     )
