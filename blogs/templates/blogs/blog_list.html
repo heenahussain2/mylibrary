@@ -1,0 +1,15 @@
+{% extends 'base_generic.html' %}
+
+{% block cssfiles %}
+{% load static %}
+  <link rel="stylesheet" href="{% static 'css/collection.css' %}" type="text/css">
+{% endblock %}
+
+{% block content_inside %}
+    <div class="no-books">
+      <p>Work in Progress</p>
+      <p>Meanwhile you can explore our other sections like <i>My Collection</i> and <i>Wishlist</i></p>
+      <p>Add books that you have read or want to read in respective sections</p>
+      <p>Share with others the joy of reading..</p>
+    </div>
+{% endblock %}

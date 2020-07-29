@@ -7,9 +7,27 @@
 
 {% block content %}
   <div id="main-container">
-    <p>You have successfuly logged out!</p>
-		<p>Thank you for using</p>
-		<h1><a class="home-page-url" href="{% url 'landing-page' %}">My Library</a></h1>
-		<div class="view-details green-background"><a href="{% url 'login' %}" class="button">Login Again</a></div>
+    <img class="door-img" src="https://images.unsplash.com/photo-1559871753-75a00941f6b2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="piture of a closed door">
+    <div class="text-part">
+        <section id="navbar-outside" class="navbar">
+    				<ul>
+    					<!-- <li><a href="{% url 'login'%}" class="nav-link">Login</a></li> -->
+    					<li><a href="{% url 'landing-page'%}" class="nav-link">Home</a></li>
+    				</ul>
+          </section>
+        <section class="main-text-part">
+            <h1><a class="home-page-url" href="{% url 'landing-page' %}">My Library</a></h1>
+            <p class="first-line">You have successfuly logged out!</p>
+        		<p>Thank you for using our website</p>
+            <p>To login again <a class="login-link" href="{% url 'login' %}">click here</a></p>
+            <div class="footer-links-div">
+              <a class="footer-links" href="{% url 'landing-page'%}">Home</a> |
+              <a class="footer-links" href="#">News</a> |
+              <a class="footer-links" href="#">Contact</a>
+            </div>
+        		<!-- <h1><a class="home-page-url" href="{% url 'landing-page' %}">My Library</a></h1> -->
+        		<!-- <div class="view-details green-background"><a href="{% url 'login' %}" class="button">Login Again</a></div> -->
+        </section>
+    </div>
   </div>
 {% endblock %}
