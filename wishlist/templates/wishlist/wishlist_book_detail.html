@@ -1,0 +1,94 @@
+{% extends "base_generic.html" %}
+
+{% block cssfiles %}
+{% load static %}
+  <link rel="stylesheet" href="{% static 'css/detail_view.css' %}" type="text/css">
+  <link rel="stylesheet" href="{% static 'css/wishlist_detail_view.css' %}" type="text/css">
+{% endblock %}
+
+{% block side_navbar %}
+    {% if request.user == bookinstance_obj.book_owner %}
+      <li class="side-active-link"><a class="sidenav-link" href="{% url 'wishlist-initial' %}">Back</a></li>
+    {% else %}
+      <li class="side-active-link"><a class="sidenav-link" href="{% url 'index' %}">Back</a></li>
+    {% endif %}
+{% endblock %}
+
+{% block content_inside %}
+  {% url 'book-detail' id=bookinstance_obj.id  as user_detail_url %}
+  <div id="main-data-container">
+    <!-- <div class="delete-book"><a href="{{ bookinstance.get_delete_url }}">Delete Book</a></div> -->
+    <h1>{{ bookinstance_obj.book.title }}</h1>
+    <!-- <p class="goto-collection"><a class="collection-link" href="{% url 'books' %}">Go to Collection</a></p> -->
+		<div class="book-author">Author - {{ bookinstance_obj.book.author }}</div>
+    <div id="book-description">
+			<img class="book-image" src="{{ book_data.book_image_links.thumbnail }}" alt="{{ bookinstance_obj.book.title }}">
+      <!-- <img class="book-image" src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d1/The_Fabric_of_the_Cosmos_-_bookcover.jpg/220px-The_Fabric_of_the_Cosmos_-_bookcover.jpg"> -->
+			<div class="book-desc-list">
+				<p><strong>Reason to Buy:</strong></p>
+        {% if bookinstance_obj.reason_to_buy %}
+            <p>{{ bookinstance_obj.reason_to_buy }}</p>
+        {% else %}
+            <p>No reason provided</p>
+        {% endif %}
+				<p><strong>Language:</strong></p>
+				<p>English</p>
+				<p><strong>Page Count:</strong></p>
+        {% if book_data.page_count %}
+				    <p>{{ book_data.page_count }}</p>
+        {% else %}
+            <p>Data not Available</p>
+        {% endif %}
+				<p><strong>Average Rating:</strong></p>
+        {% if book_data.average_rating %}
+				    <p>{{ book_data.average_rating }} (<a class="gbooks-link" target="_blank" href="{{ book_data.preview_link }}">Google Books Rating</a>)</p>
+        {% else %}
+            <p>Data not Available</p>
+        {% endif %}
+			</div>
+		</div>
+		<h3>Tags</h3>
+		<div id="tags-grid">
+      {% for each_genre in book_data.genre %}
+			<span class="tags blue-background">{{ each_genre }}</span>
+      {% endfor %}
+		</div>
+		<h3>Google Books Summary</h3>
+		<div class="book-summary">
+      {% if book_data.description %}
+          {% if clipped_desc == True %}
+              <p>{{ book_data.clipped_description }}...<a target="_blank" class="gbooks-link" href="{{ book_data.preview_link }}">View more</a></p>
+          {% else %}
+              <p>{{ book_data.description}} </p>
+          {% endif %}
+      {% else %}
+          <p>Data not Available</p>
+      {% endif %}
+		</div>
+    <h3>New York Times Review</h3>
+    {% if nytimes_review %}
+        {% for each_review in nytimes_review %}
+          <div id="review-box">
+            <p class="review-snippet">{{ each_review.summary }}... <a class="gbooks-link" href="{{ each_review.review_url }}" target="_blank">Read Full Review</a></p>
+            <p>by - {{ each_review.review_by }}</p>
+            <p>Publication Date - {{ each_review.publication_date }}</p>
+          </div>
+        {% endfor %}
+    {% else %}
+        <p class="not-found" >No Review Available</p>
+    {% endif %}
+    <h3>Critics Review</h3>
+    {% if critcs_review %}
+        {% for each_review in critcs_review %}
+          <div id="review-box">
+            <p class="review-snippet">{{ each_review.summary }}... <a class="gbooks-link" href="{{ each_review.review_url }}" target="_blank">Read Full Review</a></p>
+            <p>by- {{ each_review.source }}</p>
+            <p>Review Date - {{ each_review.review_date }}</p>
+          </div>
+        {% endfor %}
+    {% else %}
+      <p class="not-found" >No Review Available</p>
+    {% endif %}
+    <h3>MyLibrary User Reviews</h3>
+</div>
+{% endblock %}

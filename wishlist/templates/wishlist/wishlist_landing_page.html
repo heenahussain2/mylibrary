@@ -5,26 +5,50 @@
   <link rel="stylesheet" href="{% static 'css/wishlist_landing.css' %}" type="text/css">
 {% endblock %}
 
-{% block content %}
+{% block content_inside %}
     {% if book_data_list %}
-        <div id="main-container">
-            {% for each_book in book_data_list %}
-                {% if each_book.actual_book_title != "" %}
-                    <section class="book-list blue-background">
-                        <img class="book-image" src="{{ each_book.book_image_links.thumbnail }}" alt="{{ each_book.actual_book_title }}">
-                        <div class="book-content">
-                            <a href="{{ each_book.bookinstance_obj.get_absolute_url }}"><h3 class="book-title">{{ each_book.actual_book_title }}</h3></a>
-                            <div class="book-author">Author - {{ each_book.wishlist_instance_obj.book.author }}</div>
-                            <div class="book-decsription">{{ each_book.descrition }}</div>
-                            <!-- <div class="delete-book"><a href="{{ book_inst.get_delete_url }}">Delete Book</a></div> -->
-                            <div class="delete-book"><a href="#">Delete Book</a></div>
-                        </div>
-                    </section>
-                {% endif %}
-            {% endfor %}
+      <div id="book-list-container">
+          {% for each_book in book_data_list %}
+              {% if each_book.actual_book_title != "" %}
+                  <section class="book-list blue-background">
+                      <img class="book-image" src="{{ each_book.book_image_links.thumbnail }}" alt="{{ each_book.actual_book_title }}">
+                      <div class="book-content">
+                          <a href="{% url 'wishlist-detail' pk=each_book.bookinstance_obj.id %}"><h3 class="book-title">{{ each_book.actual_book_title }}</h3></a>
+                          <div class="book-author">Author - {{ each_book.bookinstance_obj.book.author }}</div>
+                          {% if each_book.clipped_desc %}
+                              <div class="book-decsription">{{ each_book.clipped_description }} ...<a href="{% url 'wishlist-detail' pk=each_book.bookinstance_obj.id %}">View More</a></div>
+                          {% else %}
+                              <div class="book-decsription">{{ each_book.description }}  <a href="{% url 'wishlist-detail' pk=each_book.bookinstance_obj.id %}">View More</a></div>
+                          {% endif %}
+                          <div class="delete-book"><a href="{% url 'delete-book-wishlist' pk=each_book.bookinstance_obj.id %}">Delete Book</a></div>
+                      </div>
+                  </section>
+              {% endif %}
+          {% endfor %}
+      </div>
     {% else %}
-        <p class="no-books">Sorry! No Books Added</p>
+        <div class="no-books">
+          <p>No Books Added</p>
+          <p>In this section you can add a book that you want to read</p>
+          <p>You can get reviews from various sources when you add a book to your <i>Wishlist</i></p>
+          <p>To add a book click on <i>Add book to Wishlist</i></p>
+        </div>
     {% endif %}
-  </div>
-
+  {% if book_data_list.has_other_pages %}
+        <ul class="pagination">
+            {% if book_data_list.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ book_data_list.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+            <li class="page-item">
+                <a class="page-link" href="#">Page {{ book_data_list.number }} of {{ book_data_list.paginator.num_pages }}</a>
+            </li>
+            {% if book_data_list.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ book_data_list.next_page_number }}">Next</a>
+                </li>
+            {% endif %}
+      </ul>
+  {% endif %}
 {% endblock %}

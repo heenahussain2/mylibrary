@@ -1,0 +1,48 @@
+{% extends 'base_generic.html' %}
+
+{% block cssfiles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/add_book.css' %}">
+    <link rel="stylesheet" href="{% static 'css/add_book_wishlist.css' %}">
+{% endblock %}
+
+{% block content_inside %}
+    <div class="text-div">
+        <p><q>One glance at a book and you hear the voice of another person, perhaps someone dead for 1,000 years. To read is to voyage through time.</q> - Carl Sagan</p>
+        <p>Thinking of reading a book that you saw or heard of somewhere, prehaps from a friend or online.</p>
+        <p>No matter where you have heard of it, if you are thinking of buying it</p>
+        <p>Then add it to your <i>wishlist</i> by filling the form.</p>
+        <p>Get reviews from various sources along with a brief summary of the book.</p>
+    </div>
+    <div id='form-div'>
+        <form action="" method="post" id='add-book-form'>
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          <div class="form-fields">
+              {{ form.book_title.errors }}
+        			<label for="id_book_title">Title</label>
+              {{ form.book_title }}
+        	</div>
+          <div class="form-fields author-field">
+            <label for="id_author_firstname">Author</label>
+            {{ form.author_firstname.errors }}
+            {{ form.author_firstname }}
+            {{ form.author_lastname.errors }}
+            {{ form.author_lastname }}
+        </div>
+          <div class="form-fields">
+              {{ form.language.errors }}
+        			<label for="id_language">Language</label>
+              {{ form.language }}
+        	</div>
+          <div class="form-fields">
+              {{ form.summary.errors }}
+        			<label for="id_summary">Reason to buy or read</label>
+              {{ form.summary }}
+        	</div>
+          <div class="form-fields submit-btn">
+            <input type="submit" value="Add Book" class="submit-button crimson-background">
+          </div>
+        </form>
+    </div>
+{% endblock %}

@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class WishlistBookInstance(models.Model):
     """Model representing a specific copy of a book in wishlist."""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique ID for this particular book across whole library')
-    book = models.ForeignKey(Book, on_delete=models.SET_NULL, null=True,blank=True)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=True,blank=True)
     # imprint = models.CharField(max_length=200)
     reason_to_buy = models.TextField(max_length=1000, help_text='Enter a brief description of the book',null=True,blank=True)
     added_on = models.DateField(default=timezone.now, null=True, blank=True)
@@ -21,8 +21,8 @@ class WishlistBookInstance(models.Model):
     #     """Returns the url to access a detail record for this book."""
     #     return reverse('wishlist-book-detail', args=[str(self.id)])
 
-    # def get_delete_url(self):
-    #     return reverse('delete-book', args=[str(self.id)])
+    def get_delete_url(self):
+        return reverse('delete-book-wishlist', args=[str(self.id)])
 
     def __str__(self):
         """String for representing the Model object."""
