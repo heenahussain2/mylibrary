@@ -19,6 +19,7 @@ urlpatterns = [
 
     path('',include('catalog.urls')),
     path('wishlist/', include('wishlist.urls')),
+    path('blogs/',include('blogs.urls')),
     path('admin/', admin.site.urls),
 ]
 
