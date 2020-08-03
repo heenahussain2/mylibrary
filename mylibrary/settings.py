@@ -33,6 +33,7 @@ IDREAM_BOOKS_API_KEY = os.getenv("IDREAM_BOOKS_API_KEY")
 NYTIMES_API_KEY = os.getenv("NYTIMES_API_KEY")
 ## Mongodb Atlas password
 MONGO_PASSWORD = os.getenv("MONGO_PASSWORD")
+DJANGO_SETTINGS_MODULE = os.getenv("DJANGO_SETTINGS_MODULE")
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
