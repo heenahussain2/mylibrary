@@ -9,8 +9,8 @@
 <div id="nytimes-books">
     <!-- <h2>New York Times Bestsellers</h2> -->
     <ul>
-      <li class="{% if fiction_flag %}genre-active-link{% endif %}"><a class="genre-link" href="{% url 'bestseller-list' genre='fiction' %}">Fiction</a></li>
-      <li class="{% if not fiction_flag %}genre-active-link{% endif %}"><a class="genre-link" href="{% url 'bestseller-list' genre='non_fiction' %}">Non Fiction</a></li>
+      <li {% if fiction_flag %}class="genre-active-link"{% endif %}><a class="genre-link" href="{% url 'bestseller-list' genre='fiction' %}">Fiction</a></li>
+      <li {% if not fiction_flag %}class="genre-active-link"{% endif %}><a class="genre-link" href="{% url 'bestseller-list' genre='non_fiction' %}">Non Fiction</a></li>
     </ul>
     {% if nyt_list_data %}
       <p>( {{ from_date }} - {{ to_date }} )</p>
