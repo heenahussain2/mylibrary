@@ -152,12 +152,12 @@ class NytBestsellerView(LoginRequiredMixin, View):
             context["from_date"] =nyt_list_obj["published_date"].strftime("%d/%m/%Y")
             context["to_date"] = nyt_list_obj["next_published_date"].strftime("%d/%m/%Y")
             context["nyt_list_data"] = final_top_list
-            if genre == 'fiction':
-                context["fiction_flag"] = True
-            elif genre == 'non_fiction':
-                context["fiction_flag"] = False
         except Exception:
              context["nyt_list_data"] = []
+        if genre == 'fiction':
+            context["fiction_flag"] = True
+        elif genre == 'non_fiction':
+            context["fiction_flag"] = False
         return render(request, "catalog/nyt_bestseller_list.html",context)
 
 

@@ -22,8 +22,7 @@ load_dotenv()
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = bool(os.getenv("DEBUG",False))
-DEBUG = True
+DEBUG = bool(os.getenv("DEBUG",False))
 ## Allowed hosts
 ALLOWED_HOSTS = ['mylibrary-django-app.herokuapp.com','127.0.0.1']
 ## Google Books API key
