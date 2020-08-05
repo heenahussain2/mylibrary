@@ -126,7 +126,7 @@ class NytBestsellerView(LoginRequiredMixin, View):
         try:
             ## Get NYT Bestsellers List
             nyt_list_obj = NYTimesAPI().nyt_bestsellers_list(genre)
-            nyt_book_list = list(nyt_list_obj["book_list"].values())
+            nyt_book_list = list(nyt_list_obj["book_list"].values())[:6]
             ### get top 5 book data from google books api and create a book object
             for top_book in nyt_book_list:
                  temp_data = OrderedDict()
