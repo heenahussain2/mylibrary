@@ -38,7 +38,7 @@
         <p><strong>Weeks on List</strong></p>
 				<p>{{ nytimes_data.weeks_on_list }}</p>
 				<p><strong>Average Rating:</strong></p>
-        {% if google_books_data.average_rating %}
+        {% if google_books_data and google_books_data.average_rating %}
 				    <p>{{ google_books_data.average_rating }} (<a class="gbooks-link" target="_blank" href="{{ google_books_data.preview_link }}">Google Books Rating</a>)</p>
         {% else %}
             <p>Data not Available</p>
@@ -47,14 +47,16 @@
 		</div>
     <h3>Tags</h3>
 		<div id="tags-grid">
-      {% for each_genre in google_books_data.genre %}
-			<span class="tags blue-background">{{ each_genre }}</span>
-      {% endfor %}
+		    <span class="tags blue-background">{{ book_obj.genre.name }}</span>
 		</div>
 		<h3>Google Books Description</h3>
-		<div class="book-summary">
-			{{ google_books_data.description }}
-		</div>
+    {% if google_books_data %}
+  		<div class="book-summary">
+  			{{ google_books_data.description }}
+  		</div>
+    {% else %}
+      <p class="not-found" >Description not Available</p>
+    {% endif %}
     <h3>NY Times Book Review</h3>
     {% if nytimes_review %}
         {% for each_review in nytimes_review %}

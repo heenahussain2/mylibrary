@@ -17,15 +17,15 @@
           <div id="nytbook-grid">
               {% for each_book in nyt_list_data %}
                   <section class="book-list blue-background">
-                      <img class="book-image" src="{{ each_book.book_thumbnail }}" alt="{{ each_book.book_obj.title }}">
+                      <img class="book-image" src="{{ each_book.book_image }}" alt="{{ each_book.title }}">
                       <div class="book-content">
                           {% if fiction_flag %}
-                            <a class="book-link" href="{% url 'bestseller-detail' genre='fiction' pk=each_book.book_obj.id %}"><h3 class="book-title">{{ each_book.book_obj.title }}</h3></a>
+                            <a class="book-link" href="{% url 'bestseller-detail' genre='fiction' isbn=each_book.isbn_13 %}"><h3 class="book-title">{{ each_book.title }}</h3></a>
                           {% else %}
-                            <a class="book-link" href="{% url 'bestseller-detail' genre='non_fiction' pk=each_book.book_obj.id %}"><h3 class="book-title">{{ each_book.book_obj.title }}</h3></a>
+                            <a class="book-link" href="{% url 'bestseller-detail' genre='non_fiction' isbn=each_book.isbn_13 %}"><h3 class="book-title">{{ each_book.title }}</h3></a>
                           {% endif %}
-                          <div class="book-author">Author - {{ each_book.book_obj.author }}</div>
-                          <div class="book-rank">Rank - {{ each_book.rank }}</div>
+                          <div class="book-author">Author - {{ each_book.author }}</div>
+                          <div class="book-rank">Rank - {{ each_book.book_rank }}</div>
                           <!-- <div class="book-rank">Rank Last Week - {{ each_book.rank_last_week }}</div> -->
                           <!-- <div class="delete-book"><a href="{{ each_book.bookinstance_obj.get_delete_url }}">Delete Book</a></div> -->
                       </div>

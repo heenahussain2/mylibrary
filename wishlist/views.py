@@ -27,7 +27,7 @@ class WishlistDetailView(LoginRequiredMixin, View):
             if book_data:
                 context["bookinstance_obj"] = book_instance
                 context.update(BookDetailView().clip_description(book_data, 200))
-                context["nytimes_review"] = NYTimesAPI().get_book_review(book_data)
+                context["nytimes_review"] = NYTimesAPI().get_book_review(book_instance.book)
                 context["critcs_review"] = CriticReviewsAPI().get_critics_review(book_data)
                 # context["user_review"] =
         return render(request,'wishlist/wishlist_book_detail.html',context)

@@ -6,6 +6,8 @@ from mylibrary import settings
 from datetime import datetime, timezone
 from collections import OrderedDict
 from .google_books_api import GoogleBooksAPIData
+from catalog.models import Genre, Language
+import catalog.views
 
 class NYTimesAPI():
     def __init__(self):
@@ -31,7 +33,7 @@ class NYTimesAPI():
         temp_data["buy_links"] = each_book["buy_links"]
         return temp_data
 
-    def format_and_save_data(self, result_json):
+    def format_and_save_data(self, result_json, genre):
         list_data = result_json["results"]
         final_data = OrderedDict()
         final_data["list_name"] = list_data["list_name"]
@@ -41,9 +43,23 @@ class NYTimesAPI():
         final_data["next_publish_timestamp"] = int(final_data["next_published_date"].replace(tzinfo=timezone.utc).timestamp())
         final_data["book_list"] = OrderedDict()
         for each_book in list_data["books"]:
+            temp_book_data = {}
             string_to_encode = each_book["primary_isbn13"]
             unique_id =  str(base64.b64encode(string_to_encode.encode("utf-8")),"utf-8")
             final_data["book_list"][unique_id] = self.create_book_data(each_book)
+            ### Add books to database for efficiency later
+            ## Create Book Object for detail view
+            temp_book_data["actual_book_title"] = each_book["title"]
+            temp_book_data["authors"] = [each_book["author"]]
+            temp_book_data["isbn_13"] = each_book["primary_isbn13"]
+            temp_book_data["language"] = Language.objects.get(name="English")
+            try:
+                genre_obj = Genre.objects.get(name= genre)
+            except Exception:
+                genre_obj = Genre.objects.create(name= genre)
+                genre_obj.save()
+            temp_book_data["genre_obj"] = [genre_obj]
+            book_obj = catalog.views.AddBookToCollection().create_book_object(temp_book_data)
         ### Save data in mongo
         self.bestsellers_coll.insert_one(final_data)
         return final_data
@@ -58,7 +74,7 @@ class NYTimesAPI():
         result = requests.get(bestseller_url+self.api_key)
         if result.status_code == 200:
             result_json = result.json()
-            bestseller_list = self.format_and_save_data(result_json)
+            bestseller_list = self.format_and_save_data(result_json, genre)
         else:
             print("Error in getting list")
         return bestseller_list
@@ -77,14 +93,14 @@ class NYTimesAPI():
             else:
                 nytimes_list = latest_record[0]
         else:
-            nytimes_list = self.get_bestsellers_list(current_date_str,genre)
+            nytimes_list = self.get_bestsellers_list(current_date_str, genre)
         return nytimes_list
 
-    def get_review_data(self, review_json, google_books_data):
+    def get_review_data(self, review_json, book_obj):
         temp_data = {}
-        temp_data["book_title"] =  google_books_data["actual_book_title"]
-        temp_data["author"] = google_books_data["authors"][0]
-        temp_data["isbn_13"] = google_books_data["isbn_13"]
+        temp_data["book_title"] =  book_obj.title
+        temp_data["author"] = book_obj.author.first_name + " " + book_obj.author.last_name
+        temp_data["isbn_13"] = book_obj.isbn
         temp_data["nyt_review"] = []
         if review_json["num_results"] > 0:
             for each_review in review_json["results"]:
@@ -103,9 +119,9 @@ class NYTimesAPI():
             self.review_coll.insert_one(temp_data)
         return temp_data["nyt_review"]
 
-    def get_book_review(self, google_books_data):
+    def get_book_review(self, book_obj):
         nyt_review = []
-        isbn_13 = google_books_data["isbn_13"]
+        isbn_13 = book_obj.isbn
         review_url = "https://api.nytimes.com/svc/books/v3/reviews.json?isbn="+isbn_13+"&api-key="
         reviews = self.review_coll.find_one({"isbn_13":isbn_13},{"_id":0})
         if reviews and "nyt_review" in reviews:
@@ -115,7 +131,7 @@ class NYTimesAPI():
                 review_data = requests.get(review_url+self.api_key)
                 if review_data.status_code == 200:
                     review_json = review_data.json()
-                    nyt_review = self.get_review_data(review_json, google_books_data)
+                    nyt_review = self.get_review_data(review_json, book_obj)
             except Exception as e:
                 print("Error in Ny times API - get_book_review:\n",e)
         return nyt_review

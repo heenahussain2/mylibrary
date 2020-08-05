@@ -94,7 +94,6 @@ class HomePageView(LoginRequiredMixin, View):
         books_to_return = []
         # from_date = datetime.date(2020,6,27)
         ### NOTE: For now taking 30 days due to lack of data later will change to 3-4 days
-
         try:
             if added_to == "collection":
                 recent_books = BookInstance.objects.filter(added_on__gte=from_date.date(), added_on__lte=to_date).exclude(book_owner=current_user).order_by('-added_on')
@@ -116,70 +115,37 @@ class HomePageView(LoginRequiredMixin, View):
                     books_to_return.append(temp_data)
         return books_to_return
 
-
 class NytBestsellerView(LoginRequiredMixin, View):
     login_url = "/accounts/login/"
     redirect_field_name = "login"
     def get(self, request, genre):
         context = {}
-        final_top_list = []
+        context["fiction_flag"] = True if genre == 'fiction' else False
         try:
             ## Get NYT Bestsellers List
             nyt_list_obj = NYTimesAPI().nyt_bestsellers_list(genre)
-            nyt_book_list = list(nyt_list_obj["book_list"].values())[:6]
-            ### get top 5 book data from google books api and create a book object
-            for top_book in nyt_book_list:
-                 temp_data = OrderedDict()
-                 google_books_data = GoogleBooksAPIData().get_book_data(isbn=top_book["isbn_13"], nytimes_data=True,genre=genre)
-                 ## Create Book Object for detail view
-                 if google_books_data:
-                     google_books_data["language"] = Language.objects.get(name="English")
-                     google_books_data["genre_obj"] = []
-                     for each_genre in google_books_data["genre"]:
-                         try:
-                             genre_obj = Genre.objects.get(name= each_genre)
-                         except Exception:
-                             genre_obj = Genre.objects.create(name= each_genre)
-                             genre_obj.save()
-                         google_books_data["genre_obj"].append(genre_obj)
-
-                     book_obj = AddBookToCollection().create_book_object(google_books_data)
-                     temp_data["book_obj"] = book_obj
-                     temp_data["book_thumbnail"] = google_books_data["book_image_links"]["thumbnail"]
-                     temp_data["rank"] = top_book["book_rank"]
-                     temp_data["rank_last_week"] = top_book["rank_last_week"]
-                     final_top_list.append(temp_data)
             context["from_date"] =nyt_list_obj["published_date"].strftime("%d/%m/%Y")
             context["to_date"] = nyt_list_obj["next_published_date"].strftime("%d/%m/%Y")
-            context["nyt_list_data"] = final_top_list
+            context["nyt_list_data"] = list(nyt_list_obj["book_list"].values())
         except Exception:
              context["nyt_list_data"] = []
-        if genre == 'fiction':
-            context["fiction_flag"] = True
-        elif genre == 'non_fiction':
-            context["fiction_flag"] = False
         return render(request, "catalog/nyt_bestseller_list.html",context)
-
 
 class BestsellerDetailView(LoginRequiredMixin, View):
     login_url = "/accounts/login/"
     redirect_field_name = "login"
-    def get(self, request, genre, pk):
+    def get(self, request, genre, isbn):
         context = {}
-        book_obj = get_object_or_404(Book, pk=pk)
+        book_obj = Book.objects.get(isbn=isbn)
         if book_obj:
-            google_books_data = GoogleBooksAPIData().get_book_data(isbn=book_obj.isbn)
+            isbn_no = book_obj.isbn
             ny_times_data = NYTimesAPI().nyt_bestsellers_list(genre)
-            string_to_encode = google_books_data["isbn_13"]
-            encoded_str = str(base64.b64encode(string_to_encode.encode("utf-8")),"utf-8")
+            encoded_str = str(base64.b64encode(isbn_no.encode("utf-8")),"utf-8")
             context["book_obj"] = book_obj
-            context["google_books_data"] = google_books_data
-            context["nytimes_data"] = ny_times_data["book_list"][encoded_str]
-            context["nytimes_review"] = NYTimesAPI().get_book_review(google_books_data)
-            if genre == 'fiction':
-                context["fiction_flag"] = True
-            elif genre == 'non_fiction':
-                context["fiction_flag"] = False
+            context["google_books_data"] = GoogleBooksAPIData().get_book_data(isbn=isbn_no)
+            context["nytimes_data"] = ny_times_data["book_list"].get(encoded_str,{})
+            context["nytimes_review"] = NYTimesAPI().get_book_review(book_obj)
+            context["fiction_flag"] = True if genre == 'fiction' else False
         return render(request, 'catalog/bestseller_details.html', context=context)
 
 class BookListView(LoginRequiredMixin, View):
